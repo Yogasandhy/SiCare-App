@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:sicare_app/WelcomeScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,21 +14,22 @@ class _SplashScreenState extends State<SplashScreen>
   int index = 0;
   late AnimationController _controller;
   late Animation<double> _animation;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 1),
       vsync: this,
     );
 
     _animation = Tween<double>(begin: 0.5, end: 1).animate(_controller);
 
-    Timer.periodic(Duration(seconds: 3), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
       if (_controller.status == AnimationStatus.completed) {
         setState(() {
-          index = (index + 1) % 3;
+          index = (index + 1) % 4;
         });
         _controller.reset();
       }
@@ -36,7 +38,24 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (index == 3) {
+      Future.microtask(() {
+        _timer.cancel();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+        );
+      });
+    }
+
     return Scaffold(
       body: AnimatedContainer(
         duration: Duration(seconds: 3),
@@ -57,58 +76,60 @@ class _SplashScreenState extends State<SplashScreen>
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
-              child: index == 0
-                  ? ScaleTransition(
-                      scale: _animation,
-                      child: Image.asset('assets/SiCare.png',
-                          width: 300, height: 300),
-                    )
-                  : index == 1
-                      ? ScaleTransition(
-                          scale: _animation,
-                          child: Image.asset('assets/mainlogo.png'),
-                        )
-                      : Column(
-                          children: [
-                            Expanded(
-                              child: Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 50, top: 25),
-                                    child: ScaleTransition(
-                                      scale: _animation,
-                                      child: const Text(
-                                        'Your Health, Our Priority',
-                                        style: TextStyle(
-                                            fontSize: 15, color: Colors.white),
+            child: index == 0
+                ? ScaleTransition(
+                    scale: _animation,
+                    child: Image.asset(
+                      'assets/SiCare.png',
+                      width: 300,
+                      height: 300,
+                    ),
+                  )
+                : index == 1
+                    ? ScaleTransition(
+                        scale: _animation,
+                        child: Image.asset('assets/mainlogo.png'),
+                      )
+                    : index == 2
+                        ? Column(
+                            children: [
+                              Expanded(
+                                child: Stack(
+                                  alignment: Alignment.centerLeft,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 50, top: 25),
+                                      child: ScaleTransition(
+                                        scale: _animation,
+                                        child: const Text(
+                                          'Your Health, Our Priority',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  ScaleTransition(
-                                    scale: _animation,
-                                    child: Image.asset('assets/titikdua.png'),
-                                  ),
-                                ],
+                                    ScaleTransition(
+                                      scale: _animation,
+                                      child: Image.asset('assets/titikdua.png'),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 30.0),
-                              child: ScaleTransition(
-                                scale: _animation,
-                                child: Image.asset('assets/mainlogo.png'),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 30.0),
+                                child: ScaleTransition(
+                                  scale: _animation,
+                                  child: Image.asset('assets/mainlogo.png'),
+                                ),
                               ),
-                            ),
-                          ],
-                        )),
+                            ],
+                          )
+                        : Container(), 
+          ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
