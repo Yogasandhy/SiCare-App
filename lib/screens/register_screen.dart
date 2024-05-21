@@ -84,7 +84,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 113),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  print('Name: ${_nameController.text}');
+                  print('Phone: ${_phoneController.text}');
+                  print('Email: ${_emailController.text}');
+                  print('Password: ${_passwordController.text}');
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 56),
                   backgroundColor: Color(0xff0E82FD),
@@ -168,7 +173,7 @@ class CustomTextField extends StatelessWidget {
             const SizedBox(height: 14),
             TextField(
               controller: controller,
-              obscureText: value.isPasswordVisible,
+              obscureText: value.isPasswordVisible && isPassword,
               decoration: InputDecoration(
                 hintText: hintText,
                 border: OutlineInputBorder(
