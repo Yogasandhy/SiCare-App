@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "941144030065",
+    "project_id": "project-sicare",
+    "storage_bucket": "project-sicare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941144030065:android:5e43a090b3ee95b98654d0",
+        "android_client_info": {
+          "package_name": "com.example.sicare_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACMgznNP5h0Hkdg20gJnEbFWV2Q3x45Z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

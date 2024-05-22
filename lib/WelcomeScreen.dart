@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
@@ -57,7 +60,13 @@ class WelcomeScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return RegisterScreen();
+                        },
+                      ));
+                    },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.blue,
@@ -75,7 +84,16 @@ class WelcomeScreen extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return LoginScreen();
+                            },
+                          ),
+                        );
+                      },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.blue,
                         backgroundColor: Colors.transparent,
