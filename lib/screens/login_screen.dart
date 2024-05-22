@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sicare_app/components/custom_text_field.dart';
+import 'package:sicare_app/screens/home_screen.dart';
+import 'package:sicare_app/screens/register_screen.dart';
+
+import '../providers/Auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -81,8 +87,31 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 300),
               ElevatedButton(
                 onPressed: () {
-                  print('Email: ${_emailController.text}');
-                  print('Password: ${_passwordController.text}');
+                  auth
+                      .signInWithEmailAndPassword(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  )
+                      .then(
+                    (value) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const HomeScreen();
+                          },
+                        ),
+                      );
+                    },
+                  ).catchError(
+                    (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Login Failed: $e'),
+                        ),
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0E82FD),
@@ -114,7 +143,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/register');
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterScreen(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Sign up',

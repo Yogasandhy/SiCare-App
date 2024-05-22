@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           content: const Text('User created successfully'),
                         ),
                       );
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => LoginScreen(),
