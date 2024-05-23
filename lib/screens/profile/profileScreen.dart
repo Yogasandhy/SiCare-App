@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../providers/Auth.dart';
+import '../../providers/profileProvider.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
@@ -14,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context);
     final user = FirebaseAuth.instance.currentUser;
+    final profile = Provider.of<ProfileProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,37 +33,55 @@ class ProfileScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance.collection('users').doc(user?.uid).snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(user?.uid)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator()); 
+              return Center(child: CircularProgressIndicator());
             }
 
-            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
             return Column(
               children: [
                 SizedBox(height: 20),
                 Stack(
-                  children:[
-                    CircleAvatar(
-                      radius: 70,
-                      backgroundColor: Colors.blue,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 100,
-                      ),
-                    ),
+                  children: [
+                    profile.user.photoURL == null
+                        ? CircleAvatar(
+                            radius: 70,
+                            backgroundColor: Colors.blue,
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 100,
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 70,
+                            backgroundImage:
+                                NetworkImage(profile.user.photoURL!),
+                          ),
                     Positioned(
                       right: -4,
                       bottom: -4,
                       child: IconButton(
                         icon: Image.asset('assets/edit.png'),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfileScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],

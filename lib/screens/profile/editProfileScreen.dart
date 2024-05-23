@@ -1,6 +1,9 @@
 // EditProfileScreen.dart
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/components/custom_text_field.dart';
 import 'package:sicare_app/providers/profileProvider.dart';
@@ -13,8 +16,30 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  File? _imageFile;
+  final _picker = ImagePicker();
+
+  Future _getImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _imageFile = null;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final profile = Provider.of<ProfileProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -25,7 +50,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         centerTitle: true,
       ),
       body: StreamBuilder<DocumentSnapshot>(
-        stream: Provider.of<ProfileProvider>(context).getUserData(),
+        stream: profile.getUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -51,21 +76,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Center(
                       child: Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 70,
-                            backgroundColor: Colors.blue,
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 100,
-                            ),
-                          ),
+                          profile.user.photoURL == null || _imageFile != null
+                              ? CircleAvatar(
+                                  radius: 70,
+                                  backgroundColor: Colors.blue,
+                                  backgroundImage: _imageFile == null
+                                      ? null
+                                      : FileImage(_imageFile!),
+                                  child: _imageFile == null
+                                      ? Icon(
+                                          Icons.person,
+                                          size: 100,
+                                          color: Colors.white,
+                                        )
+                                      : null,
+                                )
+                              : CircleAvatar(
+                                  radius: 70,
+                                  backgroundColor: Colors.blue,
+                                  backgroundImage: NetworkImage(
+                                      profile.user.photoURL ??
+                                          'https://placehold.jp/150x150.png'),
+                                ),
                           Positioned(
                             right: -4,
                             bottom: -4,
                             child: IconButton(
                               icon: Image.asset('assets/edit.png'),
-                              onPressed: () {},
+                              onPressed: () {
+                                _getImage();
+                              },
                             ),
                           ),
                         ],
@@ -107,19 +147,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       onPressed: () async {
                         try {
-                          await Provider.of<ProfileProvider>(context, listen: false).updateUserProfile(
-                            name: _nameController.text,
-                            phoneNumber: _phoneController.text,
-                            password: _passwordController.text,
-                          );
+                          await profile
+                              .uploadProfilePicture(_imageFile!.path)
+                              .then((value) {
+                            profile.updateUserProfile(
+                              name: _nameController.text,
+                              phoneNumber: _phoneController.text,
+                              password: _passwordController.text,
+                              photoUrl: value,
+                            );
+                          });
+                          _imageFile = null;
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Profile updated successfully!')),
+                            SnackBar(
+                                content: Text('Profile updated successfully!')),
                           );
                           Navigator.of(context).pop();
                         } catch (e) {
                           print(e);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to update profile: $e')),
+                            SnackBar(
+                                content: Text('Failed to update profile: $e')),
                           );
                         }
                       },
