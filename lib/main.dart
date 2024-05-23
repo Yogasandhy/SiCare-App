@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sicare_app/providers/profileProvider.dart'; 
+import 'package:sicare_app/providers/doctorProvider.dart';
+import 'package:sicare_app/providers/profileProvider.dart';
 import 'package:sicare_app/screens/opening/splashScreen.dart';
 import 'package:sicare_app/firebase_options.dart';
 import 'package:sicare_app/providers/Auth.dart';
@@ -20,9 +21,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-       providers: [
-        ChangeNotifierProvider(create: (context) => Auth()),
-        ChangeNotifierProvider(create: (context) => ProfileProvider()), 
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ProfileProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DoctorProvider(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

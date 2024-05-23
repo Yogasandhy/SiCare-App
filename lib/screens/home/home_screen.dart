@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../components/doctor_card.dart';
+import '../../providers/doctorProvider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,8 +36,19 @@ class _HomeScreenState extends State<HomeScreen> {
     'Health',
   ];
 
+  final List<String> days = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final doctorP = Provider.of<DoctorProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('assets/mainlogobiru.png', fit: BoxFit.cover),
@@ -97,6 +112,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10.0),
+            FutureBuilder(
+              future: doctorP.getDoctorById("bUnT6Sv4vsCW7PzyrkwE"),
+              builder: (context, snapshot) {
+                //snapshot.data to map
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                var doctorData = snapshot.data!.data() as Map<String, dynamic>;
+                return DoctorCard(doctorData: doctorData, days: days);
+              },
+            )
           ],
         ),
       ),
