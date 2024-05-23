@@ -16,7 +16,7 @@ class UserModel {
   });
 
   String capitalize(String text) {
-    if (text == null || text.isEmpty) {
+    if (text.isEmpty) {
       return text;
     }
 
@@ -37,4 +37,5 @@ class UserModel {
       'address': address,
     };
   }
+  
 }

@@ -1,13 +1,15 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/providers/Auth.dart';
-import 'package:sicare_app/screens/login_screen.dart';
+import 'package:sicare_app/screens/auth/login_screen.dart';
 
-import '../components/custom_text_field.dart';
+import '../../components/custom_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -44,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final auth = Provider.of<Auth>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Register',
           style: TextStyle(
             color: Colors.black,
@@ -55,9 +57,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -66,27 +68,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hintText: 'Input your name here',
                 placeholder: 'Full Name',
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               CustomTextField(
                 controller: _phoneController,
                 hintText: 'Input your phone number here',
                 placeholder: 'Phone Number',
                 isPhone: true,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               CustomTextField(
                 controller: _emailController,
                 hintText: 'Input your email here',
                 placeholder: 'Email',
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               CustomTextField(
                 controller: _passwordController,
                 hintText: 'Input your password here',
                 placeholder: 'Password',
                 isPassword: true,
               ),
-              const SizedBox(height: 113),
+              SizedBox(height: 113),
               ElevatedButton(
                 onPressed: () {
                   auth
@@ -101,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       // User creation successful
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text('User created successfully'),
+                          content: Text('User created successfully'),
                         ),
                       );
                       Navigator.pushReplacement(
@@ -121,13 +123,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 56),
+                  minimumSize: Size(double.infinity, 56),
                   backgroundColor: Color(0xff0E82FD),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Register',
                   style: TextStyle(
                     fontSize: 16.0,
@@ -136,12 +138,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               //already have an account? Sign In
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Already have an account? ',
                     style: TextStyle(
                       fontSize: 12.0,
@@ -156,7 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       );
                     },
-                    child: const Text(
+                    child: Text(
                       'Sign In',
                       style: TextStyle(
                         fontSize: 12.0,

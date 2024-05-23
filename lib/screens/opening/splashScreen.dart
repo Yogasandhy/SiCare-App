@@ -1,9 +1,11 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sicare_app/WelcomeScreen.dart';
+import 'package:sicare_app/screens/opening/welcomeScreen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -20,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: Duration(seconds: 1),
       vsync: this,
     );
 
@@ -51,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
         _timer.cancel();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+          MaterialPageRoute(builder: (context) => WelcomeScreen()),
         );
       });
     }
@@ -74,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Center(
             child: index == 0
                 ? ScaleTransition(
@@ -101,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen>
                                       padding: EdgeInsets.only(left: 50, top: 25),
                                       child: ScaleTransition(
                                         scale: _animation,
-                                        child: const Text(
+                                        child: Text(
                                           'Your Health, Our Priority',
                                           style: TextStyle(
                                             fontSize: 15,
@@ -118,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 30.0),
+                                padding: EdgeInsets.only(bottom: 30.0),
                                 child: ScaleTransition(
                                   scale: _animation,
                                   child: Image.asset('assets/mainlogo.png'),

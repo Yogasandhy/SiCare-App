@@ -1,21 +1,22 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:sicare_app/screens/auth/login_screen.dart';
+import 'package:sicare_app/screens/auth/register_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 30.0),
+              padding: EdgeInsets.only(top: 30.0),
               child: Container(
                 alignment: Alignment.topCenter,
                 child: Image.asset('assets/mainlogobiru.png'),
@@ -57,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
             Column(
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
@@ -80,8 +81,8 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Container(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
