@@ -147,17 +147,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       onPressed: () async {
                         try {
-                          await profile
-                              .uploadProfilePicture(_imageFile!.path)
-                              .then((value) {
+                          if (_imageFile != null) {
+                            await profile
+                                .updateProfilePicture(_imageFile!.path)
+                                .then((value) {
+                              profile.updateUserProfile(
+                                name: _nameController.text,
+                                phoneNumber: _phoneController.text,
+                                password: _passwordController.text,
+                                photoUrl: value,
+                              );
+                            });
+                          } else {
                             profile.updateUserProfile(
                               name: _nameController.text,
                               phoneNumber: _phoneController.text,
                               password: _passwordController.text,
-                              photoUrl: value,
                             );
-                          });
-                          _imageFile = null;
+                          }
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content: Text('Profile updated successfully!')),

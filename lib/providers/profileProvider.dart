@@ -43,24 +43,21 @@ class ProfileProvider extends ChangeNotifier {
     if (password != null && password.isNotEmpty) {
       await _auth.currentUser?.updatePassword(password);
     }
+
     if (photoUrl != null && photoUrl.isNotEmpty) {
       await _auth.currentUser?.updatePhotoURL(photoUrl);
     }
-
     notifyListeners();
   }
 
-  // Update Profile Picture
-  Future<String> uploadProfilePicture(String imagePath) async {
+  // Update Profile Picture if user uploads a new one
+  Future<String> updateProfilePicture(String imagePath) async {
     File image = File(imagePath);
-    final imageRef =
-        _storage.ref().child('profile_pictures/${_auth.currentUser?.uid}');
-    try {
-      await imageRef.putFile(image);
-      final url = await imageRef.getDownloadURL();
-      return url;
-    } catch (e) {
-      return e.toString();
-    }
+    final ref = _storage.ref().child('profile_pictures/${user.uid}');
+    await ref.putFile(image);
+    final url = await ref.getDownloadURL();
+    await _auth.currentUser?.updatePhotoURL(url);
+    notifyListeners();
+    return url;
   }
 }
