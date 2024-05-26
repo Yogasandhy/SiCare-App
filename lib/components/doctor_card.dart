@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sicare_app/components/day_text.dart';
+import 'package:sicare_app/screens/doctor/doctor_detail_screen.dart';
 
 import 'doctor_badge.dart';
 
@@ -7,14 +9,17 @@ class DoctorCard extends StatelessWidget {
   const DoctorCard({
     super.key,
     required this.doctorData,
-    required this.days,
+    required this.availableDates,
   });
 
   final Map<String, dynamic> doctorData;
-  final List<String> days;
+  final List<dynamic> availableDates;
 
   @override
   Widget build(BuildContext context) {
+    final days = availableDates
+        .map((e) => DateFormat('EEE').format(DateTime.parse(e['date'])))
+        .toList();
     return Card(
       color: Colors.white,
       child: Padding(
@@ -40,8 +45,11 @@ class DoctorCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DoctorBadge(
+                        fontSize: 12,
+                        height: 28,
                         icon: Icons.verified,
-                        iconColor: Color(0xff0E82FD),
+                        iconColor: Color(0xff4E4E4E),
+                        iconSize: 12,
                         title: 'Proffesional Doctor',
                         color: Color(0xff6EB4FE).withOpacity(0.5),
                       ),
@@ -51,6 +59,7 @@ class DoctorCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
+                          color: Color(0xff4E4E4E),
                         ),
                       ),
                       SizedBox(height: 4),
@@ -65,15 +74,21 @@ class DoctorCard extends StatelessWidget {
                       Row(
                         children: [
                           DoctorBadge(
+                            height: 28,
+                            fontSize: 12,
                             icon: Icons.work,
                             iconColor: Color(0xff7A7A7A),
+                            iconSize: 12,
                             title: '${doctorData['pengalaman']} Years',
                             color: Color(0xffD3D3D3).withOpacity(0.5),
                           ),
                           SizedBox(width: 8),
                           DoctorBadge(
+                            height: 28,
+                            fontSize: 12,
                             icon: Icons.star,
                             iconColor: Color(0xff7A7A7A),
+                            iconSize: 12,
                             title: '${doctorData['rating']}',
                             color: Color(0xffD3D3D3).withOpacity(0.5),
                           ),
@@ -124,7 +139,17 @@ class DoctorCard extends StatelessWidget {
                 ),
                 Spacer(),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorDetailScreen(
+                          doctorData: doctorData,
+                          availableDates: availableDates,
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(156, 40),
                     backgroundColor: Color(0xff0E82FD),
