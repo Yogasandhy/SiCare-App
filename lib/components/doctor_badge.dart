@@ -7,18 +7,24 @@ class DoctorBadge extends StatelessWidget {
     required this.title,
     required this.color,
     required this.iconColor,
+    required this.height,
+    required this.iconSize,
+    required this.fontSize,
   });
 
   final IconData icon;
   final String title;
   final Color color;
   final Color iconColor;
+  final double iconSize;
+  final double fontSize;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 28,
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      height: height,
+      padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 4.0),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(16.0),
@@ -26,12 +32,12 @@ class DoctorBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: iconColor, size: 12),
+          Icon(icon, color: iconColor, size: iconSize),
           SizedBox(width: 4.0),
           Text(
             title,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: fontSize,
               fontWeight: FontWeight.w500,
             ),
           ),

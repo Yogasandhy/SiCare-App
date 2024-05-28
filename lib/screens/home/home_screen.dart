@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,16 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'Moon',
     'Brain',
     'Health',
-  ];
-
-  final List<String> days = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
   ];
 
   @override
@@ -115,14 +105,17 @@ class _HomeScreenState extends State<HomeScreen> {
             FutureBuilder(
               future: doctorP.getDoctorById("bUnT6Sv4vsCW7PzyrkwE"),
               builder: (context, snapshot) {
-                //snapshot.data to map
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
-                var doctorData = snapshot.data!.data() as Map<String, dynamic>;
-                return DoctorCard(doctorData: doctorData, days: days);
+                final doctorData = snapshot.data!['doctor'];
+                final availableDates = snapshot.data!['available_dates'];
+                return DoctorCard(
+                  doctorData: doctorData,
+                  availableDates: availableDates,
+                );
               },
-            )
+            ),
           ],
         ),
       ),
