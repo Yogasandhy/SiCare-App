@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/providers/doctorProvider.dart';
 import 'package:sicare_app/providers/profileProvider.dart';
+import 'package:sicare_app/screens/home/home_screen.dart';
 import 'package:sicare_app/screens/opening/splashScreen.dart';
 import 'package:sicare_app/firebase_options.dart';
 import 'package:sicare_app/providers/Auth.dart';

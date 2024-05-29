@@ -18,9 +18,35 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _imageFile;
   final _picker = ImagePicker();
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late Future<Map<String, dynamic>> _userDataFuture;
 
-  Future _getImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _userDataFuture = _loadUserData();
+  }
+
+  Future<Map<String, dynamic>> _loadUserData() async {
+    final profile = Provider.of<ProfileProvider>(context, listen: false);
+    DocumentSnapshot userDoc = await profile.getUserData().first;
+    var data = userDoc.data() as Map<String, dynamic>;
+
+    _nameController.text = data['displayName'];
+    _phoneController.text = data['phoneNumber'];
+    _emailController.text = data['email'];
+    return data;
+  }
+
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
     setState(() {
       if (pickedFile != null) {
         _imageFile = File(pickedFile.path);
@@ -32,8 +58,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    _imageFile = null;
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -49,25 +77,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text('Edit Profile Information'),
         centerTitle: true,
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: profile.getUserData(),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: _userDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error loading user data'));
-          } else if (!snapshot.hasData || !snapshot.data!.exists) {
+          } else if (!snapshot.hasData) {
             return Center(child: Text('No user data available'));
           } else {
-            var data = snapshot.data!.data() as Map<String, dynamic>;
-            TextEditingController _nameController =
-                TextEditingController(text: data['displayName']);
-            TextEditingController _phoneController =
-                TextEditingController(text: data['phoneNumber']);
-            TextEditingController _emailController =
-                TextEditingController(text: data['email']);
-            TextEditingController _passwordController = TextEditingController();
-
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -76,35 +95,51 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Center(
                       child: Stack(
                         children: [
-                          profile.user.photoURL == null || _imageFile != null
-                              ? CircleAvatar(
-                                  radius: 70,
-                                  backgroundColor: Colors.blue,
-                                  backgroundImage: _imageFile == null
-                                      ? null
-                                      : FileImage(_imageFile!),
-                                  child: _imageFile == null
-                                      ? Icon(
-                                          Icons.person,
-                                          size: 100,
-                                          color: Colors.white,
-                                        )
-                                      : null,
-                                )
-                              : CircleAvatar(
-                                  radius: 70,
-                                  backgroundColor: Colors.blue,
-                                  backgroundImage: NetworkImage(
-                                      profile.user.photoURL ??
-                                          'https://placehold.jp/150x150.png'),
-                                ),
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundColor: Colors.blue,
+                            backgroundImage: _imageFile != null
+                                ? FileImage(_imageFile!)
+                                : (profile.user.photoURL != null
+                                    ? NetworkImage(profile.user.photoURL!)
+                                    : null) as ImageProvider?,
+                            child: _imageFile == null && profile.user.photoURL == null
+                                ? Icon(Icons.person, size: 100, color: Colors.white)
+                                : null,
+                          ),
                           Positioned(
                             right: -4,
                             bottom: -4,
                             child: IconButton(
                               icon: Image.asset('assets/edit.png'),
                               onPressed: () {
-                                _getImage();
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => BottomSheet(
+                                    onClosing: () {},
+                                    builder: (context) => Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton.icon(
+                                          icon: Icon(Icons.camera),
+                                          label: Text('Camera'),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            _getImage(ImageSource.camera);
+                                          },
+                                        ),
+                                        TextButton.icon(
+                                          icon: Icon(Icons.photo),
+                                          label: Text('Gallery'),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            _getImage(ImageSource.gallery);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -148,9 +183,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onPressed: () async {
                         try {
                           if (_imageFile != null) {
-                            await profile
-                                .updateProfilePicture(_imageFile!.path)
-                                .then((value) {
+                            await profile.updateProfilePicture(_imageFile!.path).then((value) {
                               profile.updateUserProfile(
                                 name: _nameController.text,
                                 phoneNumber: _phoneController.text,
@@ -166,15 +199,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             );
                           }
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Profile updated successfully!')),
+                            SnackBar(content: Text('Profile updated successfully!')),
                           );
                           Navigator.of(context).pop();
                         } catch (e) {
                           print(e);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Failed to update profile: $e')),
+                            SnackBar(content: Text('Failed to update profile: $e')),
                           );
                         }
                       },
