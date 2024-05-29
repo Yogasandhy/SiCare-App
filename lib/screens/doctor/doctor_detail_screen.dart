@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sicare_app/components/doctor_badge.dart';
 
+import 'booking_doctor_screen.dart';
+
 class DoctorDetailScreen extends StatefulWidget {
   const DoctorDetailScreen({
     super.key,
@@ -18,15 +20,19 @@ class DoctorDetailScreen extends StatefulWidget {
 class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   int selectedDate = 0;
   int selectedTime = 0;
+  DateTime? selectedPickerDate;
 
   @override
   Widget build(BuildContext context) {
-    final days = widget.availableDates
-        .map((e) => DateFormat('EEE').format(DateTime.parse(e['date'])))
-        .toList();
-    final formattedDates = widget.availableDates
-        .map((e) => DateFormat('dd MMM').format(DateTime.parse(e['date'])))
-        .toList();
+    final baseDate = selectedPickerDate ?? DateTime.now();
+    final days = List.generate(3, (index) {
+      final date = baseDate.add(Duration(days: index));
+      return DateFormat('EEE').format(date);
+    });
+    final formattedDates = List.generate(3, (index) {
+      final date = baseDate.add(Duration(days: index));
+      return DateFormat('dd MMM').format(date);
+    });
     final thisMonth = DateFormat('MMM').format(DateTime.now());
     final todayTime = widget.availableDates[selectedDate]['slots'];
     return Scaffold(
@@ -229,16 +235,19 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                 ),
                               ),
                             GestureDetector(
-                              onTap: () {
-                                // open date picker
-                                showDatePicker(
+                              onTap: () async {
+                                final pickedDate = await showDatePicker(
                                   context: context,
                                   firstDate: DateTime.now(),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 30)),
                                   initialDate: DateTime.now(),
                                 );
-                                // print date from date picker
+                                if (pickedDate != null) {
+                                  setState(() {
+                                    selectedPickerDate = pickedDate;
+                                  });
+                                }
                               },
                               child: BookDateCard(
                                 icon: Icons.calendar_month,
@@ -251,7 +260,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         SizedBox(
                           height: 20,
                         ),
-                        // Booking Time
+// Booking Time
                         Text(
                           'Time',
                           style: TextStyle(
@@ -304,18 +313,18 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   ],
                 ),
               ),
-              // Divider
+// Divider
               const Divider(
                 thickness: 10,
                 color: Color(0xffF5F5F5),
               ),
-              // Doctor Second Section Detail
+// Doctor Second Section Detail
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //detail info title
+//detail info title
                     Row(
                       children: [
                         Icon(
@@ -337,14 +346,14 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    //detail info content
+//detail info content
                     Text(
                       widget.doctorData['deskripsi'],
                       style: TextStyle(
                         fontSize: 14,
                       ),
                     ),
-                    // Alumni
+// Alumni
                     SizedBox(
                       height: 20,
                     ),
@@ -353,7 +362,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       title: 'Alumni',
                       data: widget.doctorData['alumni'],
                     ),
-                    // Lokasi Praktik
+// Lokasi Praktik
                     SizedBox(
                       height: 20,
                     ),
@@ -362,7 +371,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       title: 'Lokasi Praktik',
                       data: widget.doctorData['lokasi'],
                     ),
-                    // Keterangan
+// Keterangan
                     SizedBox(
                       height: 20,
                     ),
@@ -406,7 +415,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   ],
                 ),
               ),
-              // Button Book Appointment
+// Button Book Appointment
               Container(
                 height: 100,
                 decoration: BoxDecoration(
@@ -422,8 +431,17 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Book Appointment
+                   onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookingPage(
+                            doctorId: widget.doctorData['id'],
+                            selectedDate: '${formattedDates[selectedDate]} ${DateFormat('yyyy').format(DateTime.parse(widget.availableDates[selectedDate]['date']))}',
+                            selectedTime: todayTime[selectedTime],
+                          ),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 56),
@@ -479,7 +497,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
               height: 10,
             ),
             Text(
-              widget.doctorData['alumni'],
+              data,
               style: TextStyle(
                 fontSize: 14,
               ),
@@ -503,7 +521,6 @@ class BookDateCard extends StatelessWidget {
   final String date;
   final bool isSelected;
   final IconData? icon;
-
   @override
   Widget build(BuildContext context) {
     return Card(
