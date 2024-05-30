@@ -11,6 +11,11 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  //TODO: Check if user is logged in
+  bool isUserLoggedIn() {
+    return _auth.currentUser != null;
+  }
+
   //TODO: instance of firebase auth and firestore
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

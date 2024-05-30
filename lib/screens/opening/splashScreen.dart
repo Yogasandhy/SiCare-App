@@ -2,7 +2,12 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sicare_app/screens/home/bottomnavbar.dart';
+import 'package:sicare_app/screens/home/home_screen.dart';
 import 'package:sicare_app/screens/opening/welcomeScreen.dart';
+
+import '../../providers/Auth.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({super.key});
@@ -48,7 +53,18 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context);
     if (index == 3) {
+      //check if user is logged in
+      if (auth.isUserLoggedIn()) {
+        Future.microtask(() {
+          _timer.cancel();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => BottomnavbarScreen()),
+          );
+        });
+      } else {
       Future.microtask(() {
         _timer.cancel();
         Navigator.pushReplacement(
@@ -56,6 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
           MaterialPageRoute(builder: (context) => WelcomeScreen()),
         );
       });
+      }
     }
 
     return Scaffold(

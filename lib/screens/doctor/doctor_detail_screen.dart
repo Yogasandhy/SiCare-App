@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sicare_app/components/doctor_badge.dart';
 
+import '../../providers/doctorProvider.dart';
 import 'booking_doctor_screen.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
@@ -21,9 +23,23 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   int selectedDate = 0;
   int selectedTime = 0;
   DateTime? selectedPickerDate;
+  List<dynamic> noTimeHandler = [
+    {
+      'slots': ['No Time Available'],
+    },
+  ];
+  List<dynamic> listSelectedAvailable = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listSelectedAvailable = widget.availableDates;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final doctorProvider = Provider.of<DoctorProvider>(context);
     final baseDate = selectedPickerDate ?? DateTime.now();
     final days = List.generate(3, (index) {
       final date = baseDate.add(Duration(days: index));
@@ -34,7 +50,9 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
       return DateFormat('dd MMM').format(date);
     });
     final thisMonth = DateFormat('MMM').format(DateTime.now());
-    final todayTime = widget.availableDates[selectedDate]['slots'];
+    var todayTime = (selectedDate < listSelectedAvailable.length) 
+      ? listSelectedAvailable[selectedDate]['slots'] 
+      : noTimeHandler[0]['slots'];
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -244,9 +262,17 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                   initialDate: DateTime.now(),
                                 );
                                 if (pickedDate != null) {
-                                  setState(() {
-                                    selectedPickerDate = pickedDate;
-                                  });
+                                  doctorProvider.getDoctorSchedule(
+                                        widget.doctorData['id'],
+                                        pickedDate,
+                                      ).then((value){
+                                        setState(() {
+                                          listSelectedAvailable = value;
+                                          selectedPickerDate = pickedDate;
+                                          
+                                        });
+                                      });
+                                  print(listSelectedAvailable.length);
                                 }
                               },
                               child: BookDateCard(
@@ -437,7 +463,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         MaterialPageRoute(
                           builder: (context) => BookingPage(
                             doctorId: widget.doctorData['id'],
-                            selectedDate: '${formattedDates[selectedDate]} ${DateFormat('yyyy').format(DateTime.parse(widget.availableDates[selectedDate]['date']))}',
+                            selectedDate: '${formattedDates[selectedDate]} ${DateFormat('yyyy').format(DateTime.parse(listSelectedAvailable[selectedDate]['date']))}',
                             selectedTime: todayTime[selectedTime],
                           ),
                         ),

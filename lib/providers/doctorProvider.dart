@@ -50,4 +50,17 @@ class DoctorProvider with ChangeNotifier {
       };
     }
   }
+
+  //get doctor schedule by doctor_id
+  Future<List<dynamic>> getDoctorSchedule(String doctorId, DateTime date) async {
+      final availableDates = await _firestore
+          .collection('available_dates')
+          .where('doctor_id', isEqualTo: doctorId)
+          .where('date', isGreaterThanOrEqualTo: DateFormat('yyyy-MM-dd').format(date))
+          .where('date', isLessThanOrEqualTo: DateFormat('yyyy-MM-dd').format(date.add(const Duration(days: 3))))
+          .get();
+      final availableDatesData = availableDates.docs.map((e) => e.data()).toList();
+
+      return availableDatesData;
+  }
 }
