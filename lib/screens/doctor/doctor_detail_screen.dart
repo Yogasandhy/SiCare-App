@@ -50,9 +50,9 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
       return DateFormat('dd MMM').format(date);
     });
     final thisMonth = DateFormat('MMM').format(DateTime.now());
-    var todayTime = (selectedDate < listSelectedAvailable.length) 
-      ? listSelectedAvailable[selectedDate]['slots'] 
-      : noTimeHandler[0]['slots'];
+    var todayTime = (selectedDate < listSelectedAvailable.length)
+        ? listSelectedAvailable[selectedDate]['slots']
+        : noTimeHandler[0]['slots'];
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -262,16 +262,18 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                   initialDate: DateTime.now(),
                                 );
                                 if (pickedDate != null) {
-                                  doctorProvider.getDoctorSchedule(
-                                        widget.doctorData['id'],
-                                        pickedDate,
-                                      ).then((value){
-                                        setState(() {
-                                          listSelectedAvailable = value;
-                                          selectedPickerDate = pickedDate;
-                                          
-                                        });
-                                      });
+                                  doctorProvider
+                                      .getDoctorSchedule(
+                                    widget.doctorData['id'],
+                                    pickedDate,
+                                  )
+                                      .then((value) {
+                                    setState(() {
+                                      listSelectedAvailable = value;
+                                      selectedPickerDate = pickedDate;
+                                      selectedTime = 0;
+                                    });
+                                  });
                                   print(listSelectedAvailable.length);
                                 }
                               },
@@ -457,13 +459,17 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: ElevatedButton(
-                   onPressed: () {
+                    onPressed: () {
+                      if (todayTime[selectedTime] == 'No Time Available') {
+                        return;
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => BookingPage(
                             doctorId: widget.doctorData['id'],
-                            selectedDate: '${formattedDates[selectedDate]} ${DateFormat('yyyy').format(DateTime.parse(listSelectedAvailable[selectedDate]['date']))}',
+                            selectedDate:
+                                '${formattedDates[selectedDate]} ${DateFormat('yyyy').format(DateTime.parse(listSelectedAvailable[selectedDate]['date']))}',
                             selectedTime: todayTime[selectedTime],
                           ),
                         ),
@@ -471,7 +477,10 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 56),
-                      backgroundColor: Color(0xff0E82FD),
+                      backgroundColor:
+                          todayTime[selectedTime] == 'No Time Available'
+                              ? Colors.grey.withOpacity(0.5)
+                              : Color(0xff0E82FD),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),

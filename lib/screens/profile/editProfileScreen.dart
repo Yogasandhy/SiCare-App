@@ -103,8 +103,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 : (profile.user.photoURL != null
                                     ? NetworkImage(profile.user.photoURL!)
                                     : null) as ImageProvider?,
-                            child: _imageFile == null && profile.user.photoURL == null
-                                ? Icon(Icons.person, size: 100, color: Colors.white)
+                            child: _imageFile == null &&
+                                    profile.user.photoURL == null
+                                ? Icon(Icons.person,
+                                    size: 100, color: Colors.white)
                                 : null,
                           ),
                           Positioned(
@@ -118,7 +120,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   builder: (context) => BottomSheet(
                                     onClosing: () {},
                                     builder: (context) => Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         TextButton.icon(
                                           icon: Icon(Icons.camera),
@@ -160,6 +163,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     SizedBox(height: 20),
                     CustomTextField(
+                      enabled: false,
                       controller: _emailController,
                       hintText: 'Input your email here',
                       placeholder: 'Email',
@@ -183,7 +187,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onPressed: () async {
                         try {
                           if (_imageFile != null) {
-                            await profile.updateProfilePicture(_imageFile!.path).then((value) {
+                            await profile
+                                .updateProfilePicture(_imageFile!.path)
+                                .then((value) {
                               profile.updateUserProfile(
                                 name: _nameController.text,
                                 phoneNumber: _phoneController.text,
@@ -199,13 +205,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             );
                           }
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Profile updated successfully!')),
+                            SnackBar(
+                                content: Text('Profile updated successfully!')),
                           );
                           Navigator.of(context).pop();
                         } catch (e) {
                           print(e);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to update profile: $e')),
+                            SnackBar(
+                                content: Text('Failed to update profile: $e')),
                           );
                         }
                       },

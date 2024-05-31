@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
     required this.placeholder,
     this.isPassword = false,
     this.isPhone = false,
+    this.enabled = true,
   });
 
   final TextEditingController controller;
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
   final String placeholder;
   final bool isPassword;
   final bool isPhone;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class CustomTextField extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             TextField(
+              enabled: enabled,
               controller: controller,
               obscureText: value.isPasswordVisible && isPassword,
               decoration: InputDecoration(
