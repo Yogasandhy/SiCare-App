@@ -114,6 +114,7 @@ class Auth with ChangeNotifier {
         'payment_method': paymentMethod,
         'price': price,
         'status': 'pending',
+        'diagnosis': '-',
       });
       // TODO: get available_dates collection id
       final availableDates = await _firestore
@@ -132,38 +133,6 @@ class Auth with ChangeNotifier {
       });
     } catch (e) {
       throw 'An error occurred while saving transaction';
-    }
-  }
-
-  //TODO: update available dates
-  Future<void> updateAvailableDates({
-    required String doctorId,
-    required String date,
-    required String time,
-  }) async {
-    try {
-      final availableDates = await _firestore
-          .collection('available_dates')
-          .where('doctor_id', isEqualTo: doctorId)
-          .where('date', isEqualTo: date)
-          .get();
-
-      if (availableDates.docs.isEmpty) {
-        throw 'No available dates found for the specified doctor and date';
-      }
-
-      final availableDatesId = availableDates.docs.first.id;
-      print(availableDatesId);
-
-      await _firestore
-          .collection('available_dates')
-          .doc(availableDatesId)
-          .update({
-        // Your update data here
-      });
-    } catch (e) {
-      print('An error occurred while updating available dates: $e');
-      throw 'An error occurred while updating available dates';
     }
   }
 }
