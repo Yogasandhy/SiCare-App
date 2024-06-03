@@ -59,6 +59,7 @@ class AddDoctorProvider with ChangeNotifier {
         'pengalaman': experience,
         'posisi': position,
         'price': price,
+        'shift': shift,
         'rating': 0.0,
       };
 
@@ -79,6 +80,90 @@ class AddDoctorProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> fetchDoctorById(String doctorId) async {
+    try {
+      final doc = await _firestore.collection('doctors').doc(doctorId).get();
+      if (doc.exists) {
+        return doc.data()!;
+      } else {
+        throw Exception('Doctor not found');
+      }
+    } catch (error) {
+      print('Error fetching doctor: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> updateDoctor({
+    required String id,
+    required String name,
+    required String description,
+    required String alumni,
+    required String position,
+    required String experience,
+    required String location,
+    required String locationDetail,
+    required double price,
+    required String shift,
+  }) async {
+    try {
+      final doctorRef = _firestore.collection('doctors').doc(id);
+
+      final imageUrl = await uploadImage(id);
+
+      final doctor = {
+        'alumni': alumni,
+        'deskripsi': description,
+        'imageUrl': imageUrl,
+        'lokasi': location,
+        'lokasiDetail': locationDetail,
+        'nama': name,
+        'pengalaman': experience,
+        'posisi': position,
+        'price': price,
+        'shift': shift,
+        'rating': 0.0,
+      };
+
+      await doctorRef.update(doctor);
+      notifyListeners();
+    } catch (error) {
+      print('Error updating doctor: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> updateAvailableDates({
+    required String doctorId,
+    required String shift,
+  }) async {
+    try {
+      // Delete existing available dates for the doctor
+      final availableDatesQuery = await _firestore.collection('available_dates')
+        .where('doctor_id', isEqualTo: doctorId)
+        .get();
+
+      for (var dateDoc in availableDatesQuery.docs) {
+        await dateDoc.reference.delete();
+      }
+
+      // Generate new slots based on the updated shift
+      final slots = _generateSlots(shift);
+
+      // Add new available date entry
+      await _firestore.collection('available_dates').add({
+        'doctor_id': doctorId,
+        'date': formattedDate,
+        'slots': slots,
+      });
+
+      notifyListeners();
+    } catch (error) {
+      print('Error updating available dates: $error');
+      rethrow;
+    }
+  }
+
   List<String> _generateSlots(String shift) {
     switch (shift) {
       case 'Shift 1':
@@ -92,7 +177,7 @@ class AddDoctorProvider with ChangeNotifier {
     }
   }
 
-   Future<void> deleteDoctor(String doctorId) async {
+  Future<void> deleteDoctor(String doctorId) async {
     try {
       print('Starting deletion process for doctor with ID: $doctorId');
       await _firestore.collection('doctors').doc(doctorId).delete();
@@ -118,5 +203,4 @@ class AddDoctorProvider with ChangeNotifier {
       rethrow; 
     }
   }
-
 }

@@ -150,7 +150,7 @@ class DoctorCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Editdoctorscreen(),
+                            builder: (context) => EditDoctorScreen(doctorId: doctorId),
                           ),
                         );
                       },
