@@ -471,6 +471,8 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                             selectedDate:
                                 '${formattedDates[selectedDate]} ${DateFormat('yyyy').format(DateTime.parse(listSelectedAvailable[selectedDate]['date']))}',
                             selectedTime: todayTime[selectedTime],
+                            selectedDateFormatted:
+                                listSelectedAvailable[selectedDate]['date'],
                           ),
                         ),
                       );

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sicare_app/providers/doctorProvider.dart';
 import 'package:sicare_app/screens/doctor/payment_screen.dart';
 import '../../components/payment_card.dart';
+import '../../providers/Auth.dart';
 
 class BookingPage extends StatefulWidget {
   final String doctorId;
   final String selectedDate;
   final String selectedTime;
+  final String selectedDateFormatted;
 
   BookingPage({
     required this.doctorId,
     required this.selectedDate,
     required this.selectedTime,
+    required this.selectedDateFormatted,
   });
 
   @override
@@ -41,6 +45,7 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<Auth>(context);
     if (_isLoading) {
       return Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -49,7 +54,8 @@ class _BookingPageState extends State<BookingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Booking Detail', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Booking Detail',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -221,18 +227,47 @@ class _BookingPageState extends State<BookingPage> {
                   SizedBox(height: 10.0),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentPage(
-                            bookingData: {
-                              'doctor': doctorData,
-                              'selectedDate': widget.selectedDate,
-                              'selectedTime': widget.selectedTime,
-                            },
+                      try {
+                        authProvider
+                            .saveTransaction(
+                          doctorId: widget.doctorId,
+                          userId: authProvider.user.uid,
+                          date: widget.selectedDate,
+                          formattedDate: widget.selectedDateFormatted,
+                          time: widget.selectedTime,
+                          price: doctorData?['price'] ?? '0',
+                          paymentMethod: selectedPaymentMethod!,
+                        )
+                            .then(
+                          (_) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PaymentPage(
+                                  bookingData: {
+                                    'doctor': doctorData,
+                                    'selectedDate': widget.selectedDate,
+                                    'selectedTime': widget.selectedTime,
+                                  },
+                                ),
+                              ),
+                            );
+                            // show snackbar when success
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('Transaction saved successfully!'),
+                              ),
+                            );
+                          },
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to save transaction: $e'),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 56),

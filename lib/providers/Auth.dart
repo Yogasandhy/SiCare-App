@@ -11,6 +11,9 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  // TODO: get current user
+  User get user => _auth.currentUser!;
+
   //TODO: Check if user is logged in
   bool isUserLoggedIn() {
     return _auth.currentUser != null;
@@ -89,5 +92,78 @@ class Auth with ChangeNotifier {
   //TODO: sign out
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  //TODO: save transaction to firestore
+  Future<void> saveTransaction({
+    required String doctorId,
+    required String userId,
+    required String date,
+    required String formattedDate,
+    required String time,
+    required String paymentMethod,
+    required String price,
+  }) async {
+    try {
+      // TODO: save transaction to firestore
+      await _firestore.collection('transactions').add({
+        'doctor_id': doctorId,
+        'user_id': userId,
+        'date': date,
+        'time': time,
+        'payment_method': paymentMethod,
+        'price': price,
+        'status': 'pending',
+      });
+      // TODO: get available_dates collection id
+      final availableDates = await _firestore
+          .collection('available_dates')
+          .where('doctor_id', isEqualTo: doctorId)
+          .where('date', isEqualTo: formattedDate)
+          .get();
+      final availableDatesId = availableDates.docs.first.id;
+      print(availableDatesId);
+      //TODO: update available dates
+      await _firestore
+          .collection('available_dates')
+          .doc(availableDatesId)
+          .update({
+        'slots': FieldValue.arrayRemove([time]),
+      });
+    } catch (e) {
+      throw 'An error occurred while saving transaction';
+    }
+  }
+
+  //TODO: update available dates
+  Future<void> updateAvailableDates({
+    required String doctorId,
+    required String date,
+    required String time,
+  }) async {
+    try {
+      final availableDates = await _firestore
+          .collection('available_dates')
+          .where('doctor_id', isEqualTo: doctorId)
+          .where('date', isEqualTo: date)
+          .get();
+
+      if (availableDates.docs.isEmpty) {
+        throw 'No available dates found for the specified doctor and date';
+      }
+
+      final availableDatesId = availableDates.docs.first.id;
+      print(availableDatesId);
+
+      await _firestore
+          .collection('available_dates')
+          .doc(availableDatesId)
+          .update({
+        // Your update data here
+      });
+    } catch (e) {
+      print('An error occurred while updating available dates: $e');
+      throw 'An error occurred while updating available dates';
+    }
   }
 }
