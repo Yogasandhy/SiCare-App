@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sicare_app/components/day_text.dart';
+import 'package:sicare_app/screens/admin/edit_doctor_screen.dart';
 import 'package:sicare_app/screens/doctor/doctor_detail_screen.dart';
-
+import '../providers/AddDoctorProvider.dart';
 import 'doctor_badge.dart';
 
 class DoctorCard extends StatelessWidget {
-  const DoctorCard({
-    super.key,
-    required this.doctorData,
-    required this.availableDates,
-  });
-
+  final bool isAdmin;
+  final String doctorId; 
   final Map<String, dynamic> doctorData;
   final List<dynamic> availableDates;
+
+  const DoctorCard({
+    Key? key,
+    required this.doctorId,
+    required this.doctorData,
+    required this.availableDates,
+    this.isAdmin = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +122,6 @@ class DoctorCard extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  // show days from list give padding
                   for (var day in days)
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -130,44 +135,91 @@ class DoctorCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Rp. ${doctorData['price']}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DoctorDetailScreen(
-                          doctorData: doctorData,
-                          availableDates: availableDates,
-                        ),
+                Text('Rp. ${doctorData['price']}',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                isAdmin
+                    ? SizedBox(
+                        width: 50.0,
+                      )
+                    : Spacer(),
+                if (isAdmin) ...[
+                  Flexible(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Editdoctorscreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        backgroundColor: Color(0xff0E82FD),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0)),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(156, 40),
-                    backgroundColor: Color(0xff0E82FD),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
+                      child: Text('Edit',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
                     ),
                   ),
-                  child: Text(
-                    'Make Appointment',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                  SizedBox(width: 8),
+                  Flexible(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        print('Deleting doctor with ID: $doctorId');
+                        try {
+                          await Provider.of<AddDoctorProvider>(context, listen: false).deleteDoctor(doctorId);
+                          print('Doctor deleted successfully');
+                        } catch (e) {
+                          print('Failed to delete doctor: $e');
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0)),
+                      ),
+                      child: Text('Delete',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
                     ),
                   ),
-                ),
+                ] else ...[
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DoctorDetailScreen(
+                            doctorData: doctorData,
+                            availableDates: availableDates,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(0, 40),
+                      backgroundColor: Color(0xff0E82FD),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0)),
+                    ),
+                    child: Text('Make Appointment',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                  ),
+                ],
               ],
-            )
+            ),
           ],
         ),
       ),

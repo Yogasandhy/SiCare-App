@@ -94,26 +94,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     email: _emailController.text,
                     password: _passwordController.text,
                   )
-                      .then(
-                    (value) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return BottomnavbarScreen();
-                          },
-                        ),
-                      );
-                    },
-                  ).catchError(
-                    (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Email or password is incorrect'),
-                        ),
-                      );
-                    },
-                  );
+                      .then((value) {
+                    auth.getUserRole().then((role) {
+                      if (role == 'admin') {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BottomnavbarScreen(isAdmin: true),
+                          ),
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BottomnavbarScreen(),
+                          ),
+                        );
+                      }
+                    });
+                  }).catchError((e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Email or password is incorrect'),
+                      ),
+                    );
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF0E82FD),

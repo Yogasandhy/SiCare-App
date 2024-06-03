@@ -4,9 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/home/bottomnavbar.dart';
-import 'package:sicare_app/screens/home/home_screen.dart';
 import 'package:sicare_app/screens/opening/welcomeScreen.dart';
-
 import '../../providers/Auth.dart';
 
 class SplashScreen extends StatefulWidget {

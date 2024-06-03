@@ -86,6 +86,17 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<String> getUserRole() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+      return (userDoc.data() as Map<String, dynamic>)['role'] ??
+          'user'; // Default ke 'user' jika tidak ada peran yang ditentukan
+    }
+    return 'user'; // Default ke 'user' jika tidak ada pengguna yang login
+  }
+
   //TODO: sign out
   Future<void> signOut() async {
     await _auth.signOut();
