@@ -113,7 +113,7 @@ class Auth with ChangeNotifier {
         'time': time,
         'payment_method': paymentMethod,
         'price': price,
-        'status': 'pending',
+        'status': 'Aktif',
         'diagnosis': '-',
       });
       // TODO: get available_dates collection id
