@@ -134,7 +134,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                       size: 24, color: Colors.blue),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Rp ${NumberFormat("#,##0", "en_US").format(int.parse(doctorData['price']))}',
+                                    'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((doctorData['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
