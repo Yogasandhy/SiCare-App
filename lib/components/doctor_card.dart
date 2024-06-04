@@ -140,7 +140,7 @@ class DoctorCard extends StatelessWidget {
                         TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                 isAdmin
                     ? SizedBox(
-                        width: 50.0,
+                        width: 40.0,
                       )
                     : Spacer(),
                 if (isAdmin) ...[

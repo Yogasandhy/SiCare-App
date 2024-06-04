@@ -61,6 +61,7 @@ class AddDoctorProvider with ChangeNotifier {
         'price': price,
         'shift': shift,
         'rating': 0.0,
+        'created_at': FieldValue.serverTimestamp(),
       };
 
       await doctorRef.set(doctor);
@@ -126,6 +127,7 @@ class AddDoctorProvider with ChangeNotifier {
       };
 
       await doctorRef.update(doctor);
+      clearImageFile();
       notifyListeners();
     } catch (error) {
       print('Error updating doctor: $error');
@@ -139,9 +141,10 @@ class AddDoctorProvider with ChangeNotifier {
   }) async {
     try {
       // Delete existing available dates for the doctor
-      final availableDatesQuery = await _firestore.collection('available_dates')
-        .where('doctor_id', isEqualTo: doctorId)
-        .get();
+      final availableDatesQuery = await _firestore
+          .collection('available_dates')
+          .where('doctor_id', isEqualTo: doctorId)
+          .get();
 
       for (var dateDoc in availableDatesQuery.docs) {
         await dateDoc.reference.delete();
@@ -183,9 +186,10 @@ class AddDoctorProvider with ChangeNotifier {
       await _firestore.collection('doctors').doc(doctorId).delete();
       print('Doctor deleted from Firestore');
 
-      final availableDatesQuery = await _firestore.collection('available_dates')
-        .where('doctor_id', isEqualTo: doctorId)
-        .get();
+      final availableDatesQuery = await _firestore
+          .collection('available_dates')
+          .where('doctor_id', isEqualTo: doctorId)
+          .get();
 
       for (var dateDoc in availableDatesQuery.docs) {
         await dateDoc.reference.delete();
@@ -200,7 +204,12 @@ class AddDoctorProvider with ChangeNotifier {
       print('Deletion process completed successfully');
     } catch (e) {
       print('Error deleting doctor: $e');
-      rethrow; 
+      rethrow;
     }
+  }
+
+  void clearImageFile() {
+    _imageFile = null;
+    notifyListeners();
   }
 }
