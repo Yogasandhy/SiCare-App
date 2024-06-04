@@ -155,8 +155,12 @@ class _BookingPageState extends State<BookingPage> {
                   children: [
                     Text('Amount'),
                     Text(
-                        'Rp ${NumberFormat("#,##0", "en_US").format(int.parse(doctorData?['price'] ?? '0'))}',
-                        style: TextStyle(fontWeight: FontWeight.bold))
+                      'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((doctorData?['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -216,10 +220,10 @@ class _BookingPageState extends State<BookingPage> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       Text(
-                        'Rp ${NumberFormat("#,##0", "en_US").format(int.parse(doctorData?['price'] ?? '0'))}',
+                        'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((doctorData?['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
                         style: TextStyle(
-                          fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
                     ],

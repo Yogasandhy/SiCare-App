@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sicare_app/providers/AddDoctorProvider.dart';
 import 'package:sicare_app/providers/doctorProvider.dart';
 import 'package:sicare_app/providers/historyProvider.dart';
 import 'package:sicare_app/providers/profileProvider.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => HistoryProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddDoctorProvider(),
         ),
       ],
       child: MaterialApp(

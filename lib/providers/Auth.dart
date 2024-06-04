@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sicare_app/models/UserModel.dart';
 
 class Auth with ChangeNotifier {
@@ -15,6 +16,9 @@ class Auth with ChangeNotifier {
   User get user => _auth.currentUser!;
 
   //TODO: Check if user is logged in
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   bool isUserLoggedIn() {
     return _auth.currentUser != null;
   }
@@ -59,9 +63,10 @@ class Auth with ChangeNotifier {
 
       if (user != null) {
         user.updateDisplayName(name);
-        await _firestore.collection('users').doc(user.uid).set(
-              userModel.toJson(),
-            );
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userModel.toJson());
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -78,28 +83,35 @@ class Auth with ChangeNotifier {
     }
   }
 
-  //TODO: sign in with email and password
   Future<void> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      String userRole = await getUserRole();
+      await saveLoginStatus(userRole);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print(e.code);
         throw 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        print(e.code);
         throw 'Wrong password provided for that user.';
       } else {
-        print(e.code);
         throw 'An error occurred while signing in.';
       }
     }
   }
 
-  //TODO: sign out
+  Future<String> getUserRole() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+      return (userDoc.data() as Map<String, dynamic>)['role'] ?? 'user';
+    }
+    return 'user';
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
   }
@@ -144,5 +156,14 @@ class Auth with ChangeNotifier {
     } catch (e) {
       throw 'An error occurred while saving transaction';
     }
+
+  Future<void> saveLoginStatus(String userRole) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userRole', userRole);
+  }
+
+  Future<String> getLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userRole') ?? 'user';
   }
 }

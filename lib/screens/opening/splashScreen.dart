@@ -4,9 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/home/bottomnavbar.dart';
-import 'package:sicare_app/screens/home/home_screen.dart';
 import 'package:sicare_app/screens/opening/welcomeScreen.dart';
-
 import '../../providers/Auth.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -65,13 +63,13 @@ class _SplashScreenState extends State<SplashScreen>
           );
         });
       } else {
-      Future.microtask(() {
-        _timer.cancel();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => WelcomeScreen()),
-        );
-      });
+        Future.microtask(() {
+          _timer.cancel();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => WelcomeScreen()),
+          );
+        });
       }
     }
 
@@ -117,7 +115,8 @@ class _SplashScreenState extends State<SplashScreen>
                                   alignment: Alignment.centerLeft,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(left: 50, top: 25),
+                                      padding:
+                                          EdgeInsets.only(left: 50, top: 25),
                                       child: ScaleTransition(
                                         scale: _animation,
                                         child: Text(
@@ -145,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ],
                           )
-                        : Container(), 
+                        : Container(),
           ),
         ),
       ),

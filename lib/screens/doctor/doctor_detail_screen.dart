@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/components/doctor_badge.dart';
-
 import '../../providers/doctorProvider.dart';
 import 'booking_doctor_screen.dart';
 
@@ -193,7 +192,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                     ),
                                     // Doctor Price
                                     Text(
-                                      'Rp ${widget.doctorData['price']}',
+                                      'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((widget.doctorData['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -288,7 +287,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         SizedBox(
                           height: 20,
                         ),
-// Booking Time
+                        // Booking Time
                         Text(
                           'Time',
                           style: TextStyle(
@@ -301,36 +300,40 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         ),
                         ConstrainedBox(
                           constraints: BoxConstraints(maxHeight: 50),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: todayTime.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedTime = index;
-                                  });
-                                },
-                                child: Card(
-                                  color: selectedTime == index
-                                      ? Color(0xff0E82FD)
-                                      : Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text(
-                                      todayTime[index],
-                                      style: TextStyle(
-                                          color: selectedTime == index
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: List.generate(
+                              todayTime.length,
+                              (index) => Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedTime = index;
+                                    });
+                                  },
+                                  child: Card(
+                                    color: selectedTime == index
+                                        ? Color(0xff0E82FD)
+                                        : Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Center(
+                                        child: Text(
+                                          todayTime[index],
+                                          style: TextStyle(
+                                            color: selectedTime == index
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -341,18 +344,18 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   ],
                 ),
               ),
-// Divider
+              // Divider
               const Divider(
                 thickness: 10,
                 color: Color(0xffF5F5F5),
               ),
-// Doctor Second Section Detail
+              // Doctor Second Section Detail
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-//detail info title
+                    //detail info title
                     Row(
                       children: [
                         Icon(
@@ -374,14 +377,14 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                     SizedBox(
                       height: 20,
                     ),
-//detail info content
+                    //detail info content
                     Text(
                       widget.doctorData['deskripsi'],
                       style: TextStyle(
                         fontSize: 14,
                       ),
                     ),
-// Alumni
+                    // Alumni
                     SizedBox(
                       height: 20,
                     ),
@@ -390,7 +393,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       title: 'Alumni',
                       data: widget.doctorData['alumni'],
                     ),
-// Lokasi Praktik
+                    // Lokasi Praktik
                     SizedBox(
                       height: 20,
                     ),
@@ -399,7 +402,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       title: 'Lokasi Praktik',
                       data: widget.doctorData['lokasi'],
                     ),
-// Keterangan
+                    // Keterangan
                     SizedBox(
                       height: 20,
                     ),
