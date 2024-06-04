@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../providers/AddDoctorProvider.dart';
 import 'dart:io';
@@ -47,7 +48,9 @@ class _EditDoctorScreenState extends State<EditDoctorScreen> {
       _experienceController.text = doctor['pengalaman'];
       _locationController.text = doctor['lokasi'];
       _locationDetailController.text = doctor['lokasiDetail'];
-      _priceController.text = doctor['price'].toString();
+      _priceController.text = NumberFormat("#,##0", "id_ID").format(
+          double.parse(
+              doctor['price'].replaceAll(',', '').replaceAll('.', '')));
       _selectedShift = doctor['shift'];
       _imageUrl = doctor['imageUrl'];
     });
@@ -60,7 +63,7 @@ class _EditDoctorScreenState extends State<EditDoctorScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Edit Dokter',
-          style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
         ),
         body: Stack(
@@ -186,7 +189,10 @@ class _EditDoctorScreenState extends State<EditDoctorScreen> {
                             experience: _experienceController.text,
                             location: _locationController.text,
                             locationDetail: _locationDetailController.text,
-                            price: double.parse(_priceController.text),
+                            price: NumberFormat("#,##0", "id_ID").format(
+                                double.parse(_priceController.text
+                                    .replaceAll(',', '')
+                                    .replaceAll('.', ''))),
                             shift: _selectedShift!,
                           );
 

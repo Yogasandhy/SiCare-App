@@ -40,7 +40,7 @@ class AddDoctorProvider with ChangeNotifier {
     required String experience,
     required String location,
     required String locationDetail,
-    required double price,
+    required String price,
     required String shift,
   }) async {
     try {
@@ -104,13 +104,20 @@ class AddDoctorProvider with ChangeNotifier {
     required String experience,
     required String location,
     required String locationDetail,
-    required double price,
+    required String price,
     required String shift,
   }) async {
     try {
       final doctorRef = _firestore.collection('doctors').doc(id);
 
-      final imageUrl = await uploadImage(id);
+      final existingDoctorData = await fetchDoctorById(id);
+
+      String imageUrl;
+      if (_imageFile != null) {
+        imageUrl = await uploadImage(id);
+      } else {
+        imageUrl = existingDoctorData['imageUrl'];
+      }
 
       final doctor = {
         'alumni': alumni,

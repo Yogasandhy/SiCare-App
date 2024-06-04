@@ -63,13 +63,13 @@ class _SplashScreenState extends State<SplashScreen>
           );
         });
       } else {
-      Future.microtask(() {
-        _timer.cancel();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => WelcomeScreen()),
-        );
-      });
+        Future.microtask(() {
+          _timer.cancel();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => WelcomeScreen()),
+          );
+        });
       }
     }
 
@@ -115,7 +115,8 @@ class _SplashScreenState extends State<SplashScreen>
                                   alignment: Alignment.centerLeft,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(left: 50, top: 25),
+                                      padding:
+                                          EdgeInsets.only(left: 50, top: 25),
                                       child: ScaleTransition(
                                         scale: _animation,
                                         child: Text(
@@ -143,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ],
                           )
-                        : Container(), 
+                        : Container(),
           ),
         ),
       ),

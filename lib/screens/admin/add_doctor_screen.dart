@@ -32,7 +32,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Tambah Dokter',
-          style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         body: Stack(
           children: [
@@ -128,7 +128,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                             location: _locationController.text,
                             locationDetail: _locationDetailController.text,
                             price: double.parse(
-                                _priceController.text.replaceAll('.', '')),
+                                    _priceController.text.replaceAll('.', ''))
+                                .toString(),
                             shift: _selectedShift!,
                           );
 

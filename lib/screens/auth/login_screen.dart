@@ -1,11 +1,8 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/components/custom_text_field.dart';
 import 'package:sicare_app/screens/home/bottomnavbar.dart';
 import 'package:sicare_app/screens/auth/register_screen.dart';
-
 import '../../providers/Auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
@@ -29,10 +25,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text("Logging in..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
@@ -88,38 +109,39 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 300),
               ElevatedButton(
-                onPressed: () {
-                  auth
-                      .signInWithEmailAndPassword(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                  )
-                      .then((value) {
-                    auth.getUserRole().then((role) {
-                      if (role == 'admin') {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                BottomnavbarScreen(isAdmin: true),
-                          ),
-                        );
-                      } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BottomnavbarScreen(),
-                          ),
-                        );
-                      }
-                    });
-                  }).catchError((e) {
+                onPressed: () async {
+                  _showLoadingDialog(context); // Show loading dialog
+                  try {
+                    await auth.signInWithEmailAndPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    String userRole = await auth.getLoginStatus();
+                    _hideLoadingDialog(context); // Hide loading dialog
+                    if (userRole == 'admin') {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BottomnavbarScreen(isAdmin: true),
+                        ),
+                      );
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BottomnavbarScreen(),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    _hideLoadingDialog(context); // Hide loading dialog
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Email or password is incorrect'),
                       ),
                     );
-                  });
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF0E82FD),
@@ -138,7 +160,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              // dont have an account? sign up
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

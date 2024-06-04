@@ -9,7 +9,7 @@ import 'doctor_badge.dart';
 
 class DoctorCard extends StatelessWidget {
   final bool isAdmin;
-  final String doctorId; 
+  final String doctorId;
   final Map<String, dynamic> doctorData;
   final List<dynamic> availableDates;
 
@@ -56,7 +56,7 @@ class DoctorCard extends StatelessWidget {
                         icon: Icons.verified,
                         iconColor: Color(0xff4E4E4E),
                         iconSize: 12,
-                        title: 'Proffesional Doctor',
+                        title: 'Professional Doctor',
                         color: Color(0xff6EB4FE).withOpacity(0.5),
                       ),
                       SizedBox(height: 4),
@@ -135,9 +135,13 @@ class DoctorCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Rp. ${doctorData['price']}',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                Text(
+                  'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((doctorData['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 isAdmin
                     ? SizedBox(
                         width: 40.0,
@@ -150,7 +154,8 @@ class DoctorCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditDoctorScreen(doctorId: doctorId),
+                            builder: (context) =>
+                                EditDoctorScreen(doctorId: doctorId),
                           ),
                         );
                       },
@@ -173,7 +178,9 @@ class DoctorCard extends StatelessWidget {
                       onPressed: () async {
                         print('Deleting doctor with ID: $doctorId');
                         try {
-                          await Provider.of<AddDoctorProvider>(context, listen: false).deleteDoctor(doctorId);
+                          await Provider.of<AddDoctorProvider>(context,
+                                  listen: false)
+                              .deleteDoctor(doctorId);
                           print('Doctor deleted successfully');
                         } catch (e) {
                           print('Failed to delete doctor: $e');

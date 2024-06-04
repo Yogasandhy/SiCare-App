@@ -74,7 +74,21 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildCard(Icons.local_hospital, 'Doctor', '10 Doctors'),
+                  FutureBuilder<int>(
+                    future: doctorP.getDoctorCount(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return _buildCard(
+                            Icons.local_hospital, 'Doctor', 'Loading...');
+                      }
+                      if (snapshot.hasError) {
+                        return _buildCard(
+                            Icons.local_hospital, 'Doctor', 'Error');
+                      }
+                      return _buildCard(Icons.local_hospital, 'Doctor',
+                          '${snapshot.data} Doctors');
+                    },
+                  ),
                   SizedBox(width: 10),
                   _buildCard(Icons.people, 'Patient', '20 Patients'),
                   SizedBox(width: 10),

@@ -8,7 +8,7 @@ class Doctor {
   final String nama;
   final String pengalaman;
   final String posisi;
-  final double price;
+  final String price;
   final double rating;
 
   Doctor({
