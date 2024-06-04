@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class HistoryProvider extends ChangeNotifier {
   var userHistory = [];
+  var userFilteredHistory = [];
   var selectedHistory = 'Aktif';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,27 +14,21 @@ class HistoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //TODO: get transaction history by document id then return the data
-  Future<Map<String, dynamic>> getHistoryById(String id) async {
-    try {
-      final history = await _firestore.collection('transactions').doc(id).get();
-      return history.data() as Map<String, dynamic>;
-    } catch (e) {
-      print(e);
-      return {};
-    }
+  //TODO: find transaction history by status
+  void filterHistory(String status) {
+    userFilteredHistory =
+        userHistory.where((element) => element['status'] == status).toList();
+    notifyListeners();
   }
 
-  //TODO: get transaction history by user_id and filter by status
-  Future<void> getHistoryByStatus(String status) async {
+  //TODO: get transaction history by user_id
+  Future<void> getHistory() async {
     try {
       final history = await _firestore
           .collection('transactions')
           .where('user_id', isEqualTo: _auth.currentUser!.uid)
-          .where('status', isEqualTo: status)
           .get();
       userHistory = history.docs.map((e) => {...e.data(), 'id': e.id}).toList();
-      print(userHistory);
       notifyListeners();
     } catch (e) {
       print(e);

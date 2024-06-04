@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sicare_app/providers/historyProvider.dart';
 import 'package:sicare_app/screens/medical_record/medicalrecordScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/admin/doctorScreen.dart';
@@ -20,6 +21,21 @@ class BottomnavbarScreen extends StatefulWidget {
 
 class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
   int _selectedIndex = 0;
+  bool isDataLoaded = false;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (!isDataLoaded) {
+      Provider.of<HistoryProvider>(context, listen: false)
+          .getHistory()
+          .then((value) {
+        setState(() {
+          isDataLoaded = true;
+        });
+      });
+    }
+  }
 
   List<Widget> get _adminWidgetOptions => [
         HomeScreen(isAdmin: true),

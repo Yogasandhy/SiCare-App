@@ -17,11 +17,18 @@ class MedicalRecordScreen extends StatefulWidget {
 
 class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HistoryProvider>(context, listen: false)
+          .filterHistory('Aktif');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
-    final historyProvider =
-        Provider.of<HistoryProvider>(context, listen: false);
-    historyProvider.getHistoryByStatus('Aktif');
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('assets/mainlogobiru.png', fit: BoxFit.cover),
@@ -52,7 +59,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                       ),
                       onPressed: () {
                         value.changeHistory('Aktif');
-                        value.getHistoryByStatus('Aktif');
+                        value.filterHistory('Aktif');
                       },
                       child: Text(
                         'Aktif',
@@ -80,7 +87,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                       ),
                       onPressed: () {
                         value.changeHistory('Selesai');
-                        value.getHistoryByStatus('Selesai');
+                        value.filterHistory('Selesai');
                       },
                       child: Text(
                         'Selesai',
@@ -108,7 +115,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                       ),
                       onPressed: () {
                         value.changeHistory('Dibatalkan');
-                        value.getHistoryByStatus('Dibatalkan');
+                        value.filterHistory('Dibatalkan');
                       },
                       child: Text(
                         'Dibatalkan',
@@ -131,9 +138,10 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: ListView.builder(
-                    itemCount: value.userHistory.length,
+                    itemCount: value.userFilteredHistory.length,
                     itemBuilder: (context, index) {
-                      var doctorId = value.userHistory[index]['doctor_id'];
+                      var doctorId =
+                          value.userFilteredHistory[index]['doctor_id'];
                       return FutureBuilder(
                         future: doctorProvider.getDoctor(doctorId),
                         builder: (context, snapshot) {
@@ -146,7 +154,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                           }
                           return GestureDetector(
                             onTap: () {
-                              print(value.userHistory[index]['id']);
+                              print(value.userFilteredHistory[index]['id']);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -154,7 +162,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                                       data: {
                                         'doctor_data': doctorData,
                                         'history_data':
-                                            value.userHistory[index],
+                                            value.userFilteredHistory[index],
                                       },
                                     ),
                                   ));
@@ -165,7 +173,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                                 lokasiKonsultasi: doctorData!['lokasi'],
                                 spesialis: doctorData['posisi'],
                                 namaDokter: doctorData['nama'],
-                                diagnosis: value.userHistory[index]
+                                diagnosis: value.userFilteredHistory[index]
                                     ['diagnosis'],
                               ),
                             ),
