@@ -23,6 +23,14 @@ class Auth with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  //TODO: stream of user collection from firestore
+  Stream<DocumentSnapshot<Map<String, dynamic>>> get userStream {
+    return _firestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .snapshots();
+  }
+
   //TODO: create user with  email and password
   Future<void> createUserWithEmailAndPassword({
     required String email,
@@ -45,6 +53,8 @@ class Auth with ChangeNotifier {
         phoneNumber: phone,
         address: '',
         photoURL: '',
+        age: '',
+        gender: '',
       );
 
       if (user != null) {

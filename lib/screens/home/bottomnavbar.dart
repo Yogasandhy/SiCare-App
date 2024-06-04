@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:sicare_app/screens/medicalrecordScreen.dart';
+import 'package:sicare_app/screens/medical_record/medicalrecordScreen.dart';
 import 'package:sicare_app/screens/profile/profileScreen.dart';
 import 'home_screen.dart';
 
 class BottomnavbarScreen extends StatefulWidget {
- const BottomnavbarScreen({super.key});
+  const BottomnavbarScreen({super.key});
 
   @override
   _BottomnavbarScreenState createState() => _BottomnavbarScreenState();
@@ -16,9 +16,9 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = [
-   HomeScreen(),
-   MedicalRecordScreen(),
-   ProfileScreen(),
+    HomeScreen(),
+    MedicalRecordScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

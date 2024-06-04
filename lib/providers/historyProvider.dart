@@ -13,6 +13,17 @@ class HistoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //TODO: get transaction history by document id then return the data
+  Future<Map<String, dynamic>> getHistoryById(String id) async {
+    try {
+      final history = await _firestore.collection('transactions').doc(id).get();
+      return history.data() as Map<String, dynamic>;
+    } catch (e) {
+      print(e);
+      return {};
+    }
+  }
+
   //TODO: get transaction history by user_id and filter by status
   Future<void> getHistoryByStatus(String status) async {
     try {
@@ -23,6 +34,19 @@ class HistoryProvider extends ChangeNotifier {
           .get();
       userHistory = history.docs.map((e) => {...e.data(), 'id': e.id}).toList();
       print(userHistory);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //TODO: cancel booking -> update status of transaction by document id
+  Future<void> cancelBooking(String id, String status, String reason) async {
+    try {
+      await _firestore.collection('transactions').doc(id).update({
+        'status': status,
+        'reason': reason,
+      });
       notifyListeners();
     } catch (e) {
       print(e);
