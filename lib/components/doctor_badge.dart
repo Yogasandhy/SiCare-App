@@ -10,6 +10,7 @@ class DoctorBadge extends StatelessWidget {
     required this.height,
     required this.iconSize,
     required this.fontSize,
+    this.titleColor,
   });
 
   final IconData icon;
@@ -19,6 +20,7 @@ class DoctorBadge extends StatelessWidget {
   final double iconSize;
   final double fontSize;
   final double height;
+  final Color? titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class DoctorBadge extends StatelessWidget {
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.w500,
+              color: titleColor ?? Colors.black,
             ),
           ),
         ],

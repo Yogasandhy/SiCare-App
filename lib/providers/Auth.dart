@@ -12,6 +12,10 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  // TODO: get current user
+  User get user => _auth.currentUser!;
+
+  //TODO: Check if user is logged in
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -19,6 +23,19 @@ class Auth with ChangeNotifier {
     return _auth.currentUser != null;
   }
 
+  //TODO: instance of firebase auth and firestore
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //TODO: stream of user collection from firestore
+  Stream<DocumentSnapshot<Map<String, dynamic>>> get userStream {
+    return _firestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .snapshots();
+  }
+
+  //TODO: create user with  email and password
   Future<void> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -40,6 +57,8 @@ class Auth with ChangeNotifier {
         phoneNumber: phone,
         address: '',
         photoURL: '',
+        age: '',
+        gender: '',
       );
 
       if (user != null) {
@@ -96,6 +115,47 @@ class Auth with ChangeNotifier {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
+  //TODO: save transaction to firestore
+  Future<void> saveTransaction({
+    required String doctorId,
+    required String userId,
+    required String date,
+    required String formattedDate,
+    required String time,
+    required String paymentMethod,
+    required String price,
+  }) async {
+    try {
+      // TODO: save transaction to firestore
+      await _firestore.collection('transactions').add({
+        'doctor_id': doctorId,
+        'user_id': userId,
+        'date': date,
+        'time': time,
+        'payment_method': paymentMethod,
+        'price': price,
+        'status': 'Aktif',
+        'diagnosis': '-',
+      });
+      // TODO: get available_dates collection id
+      final availableDates = await _firestore
+          .collection('available_dates')
+          .where('doctor_id', isEqualTo: doctorId)
+          .where('date', isEqualTo: formattedDate)
+          .get();
+      final availableDatesId = availableDates.docs.first.id;
+      print(availableDatesId);
+      //TODO: update available dates
+      await _firestore
+          .collection('available_dates')
+          .doc(availableDatesId)
+          .update({
+        'slots': FieldValue.arrayRemove([time]),
+      });
+    } catch (e) {
+      throw 'An error occurred while saving transaction';
+    }
 
   Future<void> saveLoginStatus(String userRole) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

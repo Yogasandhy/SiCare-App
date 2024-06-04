@@ -9,9 +9,17 @@ class DoctorProvider with ChangeNotifier {
     return _firestore.collection('doctors').snapshots();
   }
 
+  // GET doctor by id
+  Future<Map<String, dynamic>> getDoctor(String id) async {
+    final doctorData = await _firestore.collection('doctors').doc(id).get();
+    final doctor = doctorData.data() as Map<String, dynamic>;
+    doctor['id'] = id;
+    return doctor;
+
   Future<int> getDoctorCount() async {
     QuerySnapshot snapshot = await _firestore.collection('doctors').get();
     return snapshot.docs.length;
+
   }
 
   // Get doctor by id and jadwal from available_dates collection query
@@ -58,6 +66,7 @@ class DoctorProvider with ChangeNotifier {
       };
     }
   }
+
 
   // Get doctor schedule by doctor_id
   Future<List<dynamic>> getDoctorSchedule(

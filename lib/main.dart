@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/providers/AddDoctorProvider.dart';
 import 'package:sicare_app/providers/doctorProvider.dart';
+import 'package:sicare_app/providers/historyProvider.dart';
 import 'package:sicare_app/providers/profileProvider.dart';
 import 'package:sicare_app/screens/opening/splashScreen.dart';
 import 'package:sicare_app/firebase_options.dart';
@@ -33,7 +34,11 @@ class MyApp extends StatelessWidget {
           create: (context) => DoctorProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => AddDoctorProvider())
+          create: (context) => HistoryProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddDoctorProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
