@@ -23,10 +23,6 @@ class Auth with ChangeNotifier {
     return _auth.currentUser != null;
   }
 
-  //TODO: instance of firebase auth and firestore
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   //TODO: stream of user collection from firestore
   Stream<DocumentSnapshot<Map<String, dynamic>>> get userStream {
     return _firestore
@@ -81,6 +77,11 @@ class Auth with ChangeNotifier {
         throw 'An error occurred while creating the user.';
       }
     }
+  }
+
+  Future<void> saveLoginStatus(String userRole) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userRole', userRole);
   }
 
   Future<void> signInWithEmailAndPassword({
@@ -156,10 +157,6 @@ class Auth with ChangeNotifier {
     } catch (e) {
       throw 'An error occurred while saving transaction';
     }
-
-  Future<void> saveLoginStatus(String userRole) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userRole', userRole);
   }
 
   Future<String> getLoginStatus() async {

@@ -3,13 +3,11 @@ import 'package:sicare_app/screens/medical_record/medicalrecordScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/admin/doctorScreen.dart';
 import 'package:sicare_app/screens/admin/patientScreen.dart';
-import 'package:sicare_app/screens/medicalrecordScreen.dart';
 import 'package:sicare_app/screens/profile/profileScreen.dart';
 import 'package:sicare_app/screens/home/home_screen.dart';
 import '../../providers/Auth.dart';
 
 class BottomnavbarScreen extends StatefulWidget {
-  const BottomnavbarScreen({super.key});
   final bool isAdmin;
 
   const BottomnavbarScreen({super.key, this.isAdmin = false});
@@ -21,11 +19,6 @@ class BottomnavbarScreen extends StatefulWidget {
 class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
   int _selectedIndex = 0;
 
-  static final List<Widget> _widgetOptions = [
-    HomeScreen(),
-    MedicalRecordScreen(),
-    ProfileScreen(),
-  ];
   List<Widget> get _adminWidgetOptions => [
         HomeScreen(isAdmin: true),
         DoctorScreen(),
