@@ -49,8 +49,10 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
       return DateFormat('dd MMM').format(date);
     });
     final thisMonth = DateFormat('MMM').format(DateTime.now());
-    var todayTime = (selectedDate < listSelectedAvailable.length)
-        ? listSelectedAvailable[selectedDate]['slots']
+    List<dynamic> todayTime = (selectedDate < listSelectedAvailable.length)
+        ? listSelectedAvailable[selectedDate]['slots'].isNotEmpty
+            ? listSelectedAvailable[selectedDate]['slots']
+            : noTimeHandler[0]['slots']
         : noTimeHandler[0]['slots'];
     return Scaffold(
       appBar: AppBar(

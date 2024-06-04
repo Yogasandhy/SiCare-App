@@ -243,7 +243,7 @@ class _BookingPageState extends State<BookingPage> {
                           paymentMethod: selectedPaymentMethod!,
                         )
                             .then(
-                          (_) {
+                          (value) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -253,6 +253,7 @@ class _BookingPageState extends State<BookingPage> {
                                     'selectedDate': widget.selectedDate,
                                     'selectedTime': widget.selectedTime,
                                   },
+                                  historyId: value,
                                 ),
                               ),
                             );

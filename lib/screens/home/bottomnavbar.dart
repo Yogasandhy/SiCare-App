@@ -9,8 +9,10 @@ import '../../providers/Auth.dart';
 
 class BottomnavbarScreen extends StatefulWidget {
   final bool isAdmin;
+  final int indexHalaman;
 
-  const BottomnavbarScreen({super.key, this.isAdmin = false});
+  const BottomnavbarScreen(
+      {super.key, this.isAdmin = false, this.indexHalaman = 0});
 
   @override
   _BottomnavbarScreenState createState() => _BottomnavbarScreenState();
@@ -36,6 +38,13 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedIndex = widget.indexHalaman;
   }
 
   @override

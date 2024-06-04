@@ -4,8 +4,11 @@ import 'package:sicare_app/screens/home/bottomnavbar.dart';
 
 class PaymentPage extends StatefulWidget {
   final Map<String, dynamic> bookingData;
+  final String historyId;
 
-  const PaymentPage({Key? key, required this.bookingData}) : super(key: key);
+  const PaymentPage(
+      {Key? key, required this.bookingData, required this.historyId})
+      : super(key: key);
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -162,6 +165,13 @@ class _PaymentPageState extends State<PaymentPage> {
                   ElevatedButton(
                     onPressed: () {
                       // Add your onPressed code here!
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BottomnavbarScreen(
+                              indexHalaman: 1,
+                            ),
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 56),

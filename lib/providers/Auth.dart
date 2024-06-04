@@ -31,6 +31,11 @@ class Auth with ChangeNotifier {
         .snapshots();
   }
 
+  //TODO: stream of user collection from firestore by id
+  Stream<DocumentSnapshot<Map<String, dynamic>>> userStreamById(String id) {
+    return _firestore.collection('users').doc(id).snapshots();
+  }
+
   //TODO: create user with  email and password
   Future<void> createUserWithEmailAndPassword({
     required String email,
@@ -118,7 +123,7 @@ class Auth with ChangeNotifier {
   }
 
   //TODO: save transaction to firestore
-  Future<void> saveTransaction({
+  Future<String> saveTransaction({
     required String doctorId,
     required String userId,
     required String date,
@@ -129,7 +134,7 @@ class Auth with ChangeNotifier {
   }) async {
     try {
       // TODO: save transaction to firestore
-      await _firestore.collection('transactions').add({
+      final addData = await _firestore.collection('transactions').add({
         'doctor_id': doctorId,
         'user_id': userId,
         'date': date,
@@ -154,6 +159,7 @@ class Auth with ChangeNotifier {
           .update({
         'slots': FieldValue.arrayRemove([time]),
       });
+      return addData.id;
     } catch (e) {
       throw 'An error occurred while saving transaction';
     }

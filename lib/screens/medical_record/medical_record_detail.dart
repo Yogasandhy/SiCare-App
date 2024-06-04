@@ -24,7 +24,7 @@ class MedicalRecordDetail extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder(
-        stream: authC.userStream,
+        stream: authC.userStreamById(data['history_data']['user_id']),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -222,50 +222,52 @@ class MedicalRecordDetail extends StatelessWidget {
               const SizedBox(height: 10),
               Spacer(),
               //button cancel appointment
-              data['history_data']['status'] == 'Aktif'
-                  ? Container(
-                      height: 100,
-                      decoration: BoxDecoration(
+              Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey.withOpacity(0.5),
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      data['history_data']['status'] == 'Aktif'
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CancelBookingScreen(
+                                  documentId: data['history_data']['id'],
+                                ),
+                              ))
+                          : null;
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 56),
+                      backgroundColor: data['history_data']['status'] == 'Aktif'
+                          ? Color(0xff0E82FD)
+                          : Colors.grey.withOpacity(0.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      'Cancel Appointment',
+                      style: TextStyle(
+                        fontSize: 16,
                         color: Colors.white,
-                        border: Border.all(
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CancelBookingScreen(
-                                    documentId: data['history_data']['id'],
-                                  ),
-                                ));
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 56),
-                            backgroundColor: Color(0xff0E82FD),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: Text(
-                            'Cancel Appointment',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(),
+                    ),
+                  ),
+                ),
+              )
             ],
           );
         },

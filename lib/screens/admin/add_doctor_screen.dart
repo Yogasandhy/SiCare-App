@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../providers/AddDoctorProvider.dart';
 import 'dart:io';
+import 'package:intl/intl.dart'; // import package intl
 
 class AddDoctorScreen extends StatefulWidget {
   const AddDoctorScreen({super.key});
@@ -119,6 +120,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                         });
 
                         try {
+                          double price = double.parse(
+                              _priceController.text.replaceAll('.', ''));
+                          String formattedPrice =
+                              NumberFormat('#,###', 'id_ID').format(price);
+
                           await addDoctorProvider.addDoctor(
                             name: _nameController.text,
                             description: _descriptionController.text,
@@ -127,9 +133,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                             experience: _experienceController.text,
                             location: _locationController.text,
                             locationDetail: _locationDetailController.text,
-                            price: double.parse(
-                                    _priceController.text.replaceAll('.', ''))
-                                .toString(),
+                            price: formattedPrice,
                             shift: _selectedShift!,
                           );
 

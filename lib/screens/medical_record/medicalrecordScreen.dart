@@ -159,11 +159,15 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                                     ),
                                   ));
                             },
-                            child: TransaksiHistoryCard(
-                              lokasiKonsultasi: doctorData!['lokasi'],
-                              spesialis: doctorData['posisi'],
-                              namaDokter: doctorData['nama'],
-                              diagnosis: value.userHistory[index]['diagnosis'],
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: TransaksiHistoryCard(
+                                lokasiKonsultasi: doctorData!['lokasi'],
+                                spesialis: doctorData['posisi'],
+                                namaDokter: doctorData['nama'],
+                                diagnosis: value.userHistory[index]
+                                    ['diagnosis'],
+                              ),
                             ),
                           );
                         },
