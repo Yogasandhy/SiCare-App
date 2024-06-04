@@ -143,6 +143,7 @@ class Auth with ChangeNotifier {
         'price': price,
         'status': 'Aktif',
         'diagnosis': '-',
+        'created_at': FieldValue.serverTimestamp(),
       });
       // TODO: get available_dates collection id
       final availableDates = await _firestore
@@ -159,6 +160,8 @@ class Auth with ChangeNotifier {
           .update({
         'slots': FieldValue.arrayRemove([time]),
       });
+      //TODO: save available dates id to transaction
+      await addData.update({'available_dates_id': availableDatesId});
       return addData.id;
     } catch (e) {
       throw 'An error occurred while saving transaction';

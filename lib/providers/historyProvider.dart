@@ -41,12 +41,41 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   //TODO: cancel booking -> update status of transaction by document id
-  Future<void> cancelBooking(String id, String status, String reason) async {
+  Future<void> cancelBooking(String id, String status, String reason,
+      String availableDocumentId, String timeBooked) async {
     try {
       await _firestore.collection('transactions').doc(id).update({
         'status': status,
         'reason': reason,
       });
+
+      // fetch available dates slots
+      DocumentSnapshot<Map<String, dynamic>> doc = await _firestore
+          .collection('available_dates')
+          .doc(availableDocumentId)
+          .get();
+      List<String> slots = List<String>.from(doc.data()!['slots']);
+
+      // Find the correct position to insert the new time slot
+      int insertIndex = slots.indexWhere((slot) =>
+          int.parse(slot.replaceAll(':', '')) >
+          int.parse(timeBooked.replaceAll(':', '')));
+
+      // If no slot is found that is later than the new time slot, append the new time slot at the end
+      if (insertIndex == -1) {
+        slots.add(timeBooked);
+      } else {
+        slots.insert(insertIndex, timeBooked);
+      }
+
+      // update available dates slots
+      await _firestore
+          .collection('available_dates')
+          .doc(availableDocumentId)
+          .update({
+        'slots': slots,
+      });
+
       notifyListeners();
     } catch (e) {
       print(e);

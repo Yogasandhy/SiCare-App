@@ -5,8 +5,15 @@ import 'package:sicare_app/screens/home/bottomnavbar.dart';
 import '../../providers/historyProvider.dart';
 
 class CancelBookingScreen extends StatefulWidget {
-  const CancelBookingScreen({super.key, required this.documentId});
+  const CancelBookingScreen({
+    super.key,
+    required this.documentId,
+    required this.availableDocumentId,
+    required this.time,
+  });
   final String documentId;
+  final String availableDocumentId;
+  final String time;
 
   @override
   State<CancelBookingScreen> createState() => _CancelBookingScreenState();
@@ -212,6 +219,8 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                                   widget.documentId,
                                   status,
                                   reason,
+                                  widget.availableDocumentId,
+                                  widget.time,
                                 );
                                 //show success message on snackbar
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -230,7 +239,9 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const BottomnavbarScreen(),
+                                          const BottomnavbarScreen(
+                                        indexHalaman: 1,
+                                      ),
                                     ));
                               } catch (e) {
                                 //show error message on snackbar

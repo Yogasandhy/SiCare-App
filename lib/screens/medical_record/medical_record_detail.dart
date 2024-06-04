@@ -244,6 +244,9 @@ class MedicalRecordDetail extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => CancelBookingScreen(
                                   documentId: data['history_data']['id'],
+                                  availableDocumentId: data['history_data']
+                                      ['available_dates_id'],
+                                  time: data['history_data']['time'],
                                 ),
                               ))
                           : null;
