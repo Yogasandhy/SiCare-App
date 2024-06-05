@@ -11,6 +11,39 @@ import '../../providers/profileProvider.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
+  void _showLogoutDialog(BuildContext context, Auth auth) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Logout"),
+          content: Text("Are you sure you want to logout?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                auth.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WelcomeScreen(),
+                  ),
+                );
+              },
+              child: Text("Logout"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context);
@@ -132,13 +165,7 @@ class ProfileScreen extends StatelessWidget {
                     title: Text('Logout'),
                     trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue),
                     onTap: () {
-                      auth.signOut();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WelcomeScreen(),
-                        ),
-                      );
+                      _showLogoutDialog(context, auth);
                     },
                   ),
                 ),

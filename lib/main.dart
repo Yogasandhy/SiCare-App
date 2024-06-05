@@ -17,8 +17,23 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  Future<bool> _onWillPop() async {
+    if (_navigatorKey.currentState!.canPop()) {
+      _navigatorKey.currentState!.pop();
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +55,20 @@ class MyApp extends StatelessWidget {
           create: (context) => AddDoctorProvider(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF0E82FD),
+      child: WillPopScope(
+        onWillPop: _onWillPop,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF0E82FD),
+            ),
+            useMaterial3: true,
+            fontFamily: "PlusJakartaSans",
           ),
-          useMaterial3: true,
-          fontFamily: "PlusJakartaSans",
+          navigatorKey: _navigatorKey,
+          home: SplashScreen(),
         ),
-        home: SplashScreen(),
       ),
     );
   }

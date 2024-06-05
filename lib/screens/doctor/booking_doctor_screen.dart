@@ -36,7 +36,7 @@ class _BookingPageState extends State<BookingPage> {
 
   Future<void> getDoctorData() async {
     final doctorProvider = DoctorProvider();
-    final data = await doctorProvider.getDoctorData(widget.doctorId);
+    final data = await doctorProvider.fetchDoctorWithDates(widget.doctorId);
     setState(() {
       doctorData = data['doctor'];
       _isLoading = false;
