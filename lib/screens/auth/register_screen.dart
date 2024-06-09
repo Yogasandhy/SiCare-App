@@ -1,11 +1,7 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/providers/Auth.dart';
 import 'package:sicare_app/screens/auth/login_screen.dart';
-
 import '../../components/custom_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -23,7 +19,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _nameController = TextEditingController();
     _phoneController = TextEditingController();
@@ -33,12 +28,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text("Registering..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
@@ -90,37 +110,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               SizedBox(height: 113),
               ElevatedButton(
-                onPressed: () {
-                  auth
-                      .createUserWithEmailAndPassword(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    name: _nameController.text,
-                    phone: _phoneController.text,
-                  )
-                      .then(
-                    (value) {
-                      // User creation successful
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('User created successfully'),
-                        ),
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ),
-                      );
-                    },
-                  ).catchError((e) {
-                    // User creation failed
+                onPressed: () async {
+                  _showLoadingDialog(context); // Show loading dialog
+                  try {
+                    await auth.createUserWithEmailAndPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      name: _nameController.text,
+                      phone: _phoneController.text,
+                    );
+                    _hideLoadingDialog(context); // Hide loading dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('User created successfully'),
+                      ),
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  } catch (e) {
+                    _hideLoadingDialog(context); // Hide loading dialog
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('User creation failed: $e'),
                       ),
                     );
-                  });
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 56),
