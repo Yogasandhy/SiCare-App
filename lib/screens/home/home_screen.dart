@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/admin/add_doctor_screen.dart';
 import '../../components/doctor_card.dart';
 import '../../providers/doctorProvider.dart';
+import 'doctor_category_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isAdmin;
@@ -144,7 +145,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSpacing: 10,
                   children: List.generate(imagePaths.length, (index) {
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DoctorCategoryScreen(
+                              category: cardLabels[index],
+                            ),
+                          ),
+                        );
+                      },
                       child: Column(
                         children: [
                           Expanded(

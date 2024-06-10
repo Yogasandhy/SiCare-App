@@ -114,4 +114,24 @@ class DoctorProvider with ChangeNotifier {
 
     return doctors;
   }
+
+  // Get doctor by posisi
+  Future<List<Map<String, dynamic>>> getDoctorsByPosition(String posisi) async {
+    final doctorsSnapshot = await _firestore
+        .collection('doctors')
+        .where('posisi', isEqualTo: posisi)
+        .get();
+    final doctors = doctorsSnapshot.docs.map((doc) {
+      final doctor = doc.data() as Map<String, dynamic>;
+      doctor['id'] = doc.id;
+      return doctor;
+    }).toList();
+
+    for (var doctor in doctors) {
+      final availableDates = await _getAvailableDates(doctor['id']);
+      doctor['available_dates'] = availableDates;
+    }
+
+    return doctors;
+  }
 }
