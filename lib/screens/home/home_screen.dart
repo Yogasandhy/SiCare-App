@@ -15,14 +15,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> imagePaths = [
-    'assets/maki_doctor.png',
+    'assets/doctor.png',
     'assets/dentist.png',
-    'assets/love.png',
+    'assets/heart.png',
     'assets/ear.png',
     'assets/intestine.png',
-    'assets/iconamoon.png',
+    'assets/moon.png',
     'assets/brain.png',
-    'assets/healthicons.png',
+    'assets/health.png',
   ];
 
   final List<String> cardLabels = [

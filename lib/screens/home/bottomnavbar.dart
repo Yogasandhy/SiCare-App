@@ -130,7 +130,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                       Colors.blue, BlendMode.srcIn)
                                   : ColorFilter.mode(
                                       Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/doctor.png'),
+                              child: Image.asset('assets/doctorIcon.png'),
                             ),
                           ),
                           label: 'Dokter',
