@@ -245,6 +245,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                 onTap: () {
                                   setState(() {
                                     selectedDate = i;
+                                    selectedTime = 0;
                                   });
                                 },
                                 child: BookDateCard(
