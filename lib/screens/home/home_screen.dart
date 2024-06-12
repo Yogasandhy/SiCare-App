@@ -13,7 +13,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   final List<String> imagePaths = [
     'assets/doctor.png',
     'assets/dentist.png',
@@ -46,6 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
     print('isAdmin value is: ${widget.isAdmin}');
   }
 
+  Future<void> _refreshData() async {
+    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+    await doctorProvider.refreshDoctors();
+    setState(() {});
+  }
+
   void _onSearchChanged(String value) async {
     if (value.isEmpty) {
       setState(() {
@@ -65,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Add this line
     final doctorP = Provider.of<DoctorProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -87,19 +95,22 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 20.0),
             if (_isSearching) ...[
               Expanded(
-                child: ListView.builder(
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, index) {
-                    final doctorData = _searchResults[index]['doctor'];
-                    final availableDates =
-                        _searchResults[index]['available_dates'];
-                    return DoctorCard(
-                      doctorId: doctorData['id'],
-                      doctorData: doctorData,
-                      availableDates: availableDates,
-                      isAdmin: widget.isAdmin,
-                    );
-                  },
+                child: RefreshIndicator(
+                  onRefresh: _refreshData,
+                  child: ListView.builder(
+                    itemCount: _searchResults.length,
+                    itemBuilder: (context, index) {
+                      final doctorData = _searchResults[index]['doctor'];
+                      final availableDates =
+                          _searchResults[index]['available_dates'];
+                      return DoctorCard(
+                        doctorId: doctorData['id'],
+                        doctorData: doctorData,
+                        availableDates: availableDates,
+                        isAdmin: widget.isAdmin,
+                      );
+                    },
+                  ),
                 ),
               ),
             ] else ...[
@@ -231,17 +242,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   final doctors = snapshot.data!;
                   return Expanded(
-                    child: ListView.builder(
-                      itemCount: doctors.length,
-                      itemBuilder: (context, index) {
-                        final doctorData = doctors[index];
-                        return DoctorCard(
-                          doctorId: doctorData['id'],
-                          doctorData: doctorData,
-                          availableDates: doctorData['available_dates'],
-                          isAdmin: widget.isAdmin,
-                        );
-                      },
+                    child: RefreshIndicator(
+                      onRefresh: _refreshData,
+                      child: ListView.builder(
+                        itemCount: doctors.length,
+                        itemBuilder: (context, index) {
+                          final doctorData = doctors[index];
+                          return DoctorCard(
+                            doctorId: doctorData['id'],
+                            doctorData: doctorData,
+                            availableDates: doctorData['available_dates'],
+                            isAdmin: widget.isAdmin,
+                          );
+                        },
+                      ),
                     ),
                   );
                 },
@@ -252,6 +266,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   Widget _buildCard(IconData icon, String title, String subtitle) {
     return Expanded(

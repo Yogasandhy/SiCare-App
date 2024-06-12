@@ -85,7 +85,7 @@ class DoctorCard extends StatelessWidget {
                             icon: Icons.work,
                             iconColor: Color(0xff7A7A7A),
                             iconSize: 12,
-                            title: '${doctorData['pengalaman']} Years',
+                            title: '${doctorData['pengalaman']}',
                             color: Color(0xffD3D3D3).withOpacity(0.5),
                           ),
                           SizedBox(width: 8),
@@ -133,7 +133,7 @@ class DoctorCard extends StatelessWidget {
               ),
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((doctorData['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
@@ -142,61 +142,53 @@ class DoctorCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                isAdmin
-                    ? SizedBox(
-                        width: 40.0,
-                      )
-                    : Spacer(),
+                Spacer(),
                 if (isAdmin) ...[
-                  Flexible(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EditDoctorScreen(doctorId: doctorId),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(120, 40),
-                        backgroundColor: Color(0xff0E82FD),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0)),
+                  ClipOval(
+                    child: Material(
+                      color: Color(0xff0E82FD), // Button color
+                      child: InkWell(
+                        splashColor: Colors.blueAccent, // Splash color
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditDoctorScreen(doctorId: doctorId),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.edit, color: Colors.white),
+                        ),
                       ),
-                      child: Text('Edit',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white)),
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Flexible(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        print('Deleting doctor with ID: $doctorId');
-                        try {
-                          await Provider.of<AddDoctorProvider>(context,
-                                  listen: false)
-                              .deleteDoctor(doctorId);
-                          print('Doctor deleted successfully');
-                        } catch (e) {
-                          print('Failed to delete doctor: $e');
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(120, 40),
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0)),
+                  SizedBox(width: 10),
+                  ClipOval(
+                    child: Material(
+                      color: Colors.red, // Button color
+                      child: InkWell(
+                        splashColor: Colors.redAccent, // Splash color
+                        onTap: () async {
+                          print('Deleting doctor with ID: $doctorId');
+                          try {
+                            await Provider.of<AddDoctorProvider>(context,
+                                    listen: false)
+                                .deleteDoctor(doctorId);
+                            print('Doctor deleted successfully');
+                          } catch (e) {
+                            print('Failed to delete doctor: $e');
+                          }
+                        },
+                        child: SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.delete, color: Colors.white),
+                        ),
                       ),
-                      child: Text('Delete',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white)),
                     ),
                   ),
                 ] else ...[

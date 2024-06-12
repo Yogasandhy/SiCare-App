@@ -1,11 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/components/doctor_card.dart';
 import '../../providers/doctorProvider.dart';
 
 class DoctorScreen extends StatelessWidget {
-  const DoctorScreen({super.key});
+  const DoctorScreen({Key? key});
+
+  Future<void> _refreshData(BuildContext context) async {
+    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+    await doctorProvider.refreshDoctors();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,44 +26,35 @@ class DoctorScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Consumer<DoctorProvider>(
           builder: (context, provider, child) {
-            return StreamBuilder<QuerySnapshot>(
-              stream: provider.getDoctors(),
+            return FutureBuilder<List<Map<String, dynamic>>>(
+              future: provider.getAllDoctorsWithAvailableDates(),
               builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                final doctors = snapshot.data!;
 
-                final doctors = snapshot.data!.docs;
+                return RefreshIndicator(
+                  onRefresh: () => _refreshData(context),
+                  child: ListView.builder(
+                    itemCount: doctors.length,
+                    itemBuilder: (context, index) {
+                      final doctorData = doctors[index];
+                      final doctorId = doctorData['id'];
+                      final availableDates = doctorData['available_dates'];
 
-                return ListView.builder(
-                  itemCount: doctors.length,
-                  itemBuilder: (context, index) {
-                    final doctorData =
-                        doctors[index].data() as Map<String, dynamic>;
-                    final doctorId = doctors[index].id;
-
-                    return FutureBuilder<List<dynamic>>(
-                      future:
-                          provider.getDoctorSchedule(doctorId, DateTime.now()),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final availableDates = snapshot.data!;
-                          return DoctorCard(
-                            doctorId: doctorId,
-                            doctorData: doctorData,
-                            availableDates: availableDates,
-                            isAdmin: true,
-                          );
-                        }
-
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    );
-                  },
+                      return DoctorCard(
+                        doctorId: doctorId,
+                        doctorData: doctorData,
+                        availableDates: availableDates,
+                        isAdmin: true,
+                      );
+                    },
+                  ),
                 );
               },
             );

@@ -4,9 +4,13 @@ import 'package:intl/intl.dart';
 
 class DoctorProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> _cachedDoctors = [];
 
   Stream<QuerySnapshot> getDoctors() {
-    return _firestore.collection('doctors').snapshots();
+    return _firestore
+        .collection('doctors')
+        .orderBy('created_at', descending: true)
+        .snapshots();
   }
 
   Future<Map<String, dynamic>> getDoctor(String id) async {
@@ -100,7 +104,37 @@ class DoctorProvider with ChangeNotifier {
   }
 
   Future<List<Map<String, dynamic>>> getAllDoctorsWithAvailableDates() async {
-    final doctorsSnapshot = await _firestore.collection('doctors').get();
+    if (_cachedDoctors.isNotEmpty) {
+      return _cachedDoctors;
+    }
+
+    final doctorsSnapshot = await _firestore
+        .collection('doctors')
+        .orderBy('created_at', descending: true)
+        .get();
+
+    final doctors = doctorsSnapshot.docs.map((doc) {
+      final doctor = doc.data() as Map<String, dynamic>;
+      doctor['id'] = doc.id;
+      return doctor;
+    }).toList();
+
+    for (var doctor in doctors) {
+      final availableDates = await _getAvailableDates(doctor['id']);
+      doctor['available_dates'] = availableDates;
+    }
+
+    _cachedDoctors = doctors;
+    return doctors;
+  }
+
+  Future<List<Map<String, dynamic>>> getDoctorsByPosition(String posisi) async {
+    final doctorsSnapshot = await _firestore
+        .collection('doctors')
+        .where('posisi', isEqualTo: posisi)
+        .orderBy('created_at', descending: true)
+        .get();
+
     final doctors = doctorsSnapshot.docs.map((doc) {
       final doctor = doc.data() as Map<String, dynamic>;
       doctor['id'] = doc.id;
@@ -115,23 +149,9 @@ class DoctorProvider with ChangeNotifier {
     return doctors;
   }
 
-  // Get doctor by posisi
-  Future<List<Map<String, dynamic>>> getDoctorsByPosition(String posisi) async {
-    final doctorsSnapshot = await _firestore
-        .collection('doctors')
-        .where('posisi', isEqualTo: posisi)
-        .get();
-    final doctors = doctorsSnapshot.docs.map((doc) {
-      final doctor = doc.data() as Map<String, dynamic>;
-      doctor['id'] = doc.id;
-      return doctor;
-    }).toList();
-
-    for (var doctor in doctors) {
-      final availableDates = await _getAvailableDates(doctor['id']);
-      doctor['available_dates'] = availableDates;
-    }
-
-    return doctors;
+  Future<void> refreshDoctors() async {
+    _cachedDoctors.clear();
+    await getAllDoctorsWithAvailableDates();
+    notifyListeners();
   }
 }

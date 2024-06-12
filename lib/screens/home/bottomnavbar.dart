@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sicare_app/providers/historyProvider.dart';
 import 'package:sicare_app/screens/medical_record/medicalrecordScreen.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +23,10 @@ class BottomnavbarScreen extends StatefulWidget {
 class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
   int _selectedIndex = 0;
   bool isDataLoaded = false;
+  DateTime? lastPressed;
+
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     if (!isDataLoaded) {
       Provider.of<HistoryProvider>(context, listen: false)
@@ -58,9 +60,32 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _selectedIndex = widget.indexHalaman;
+  }
+
+  Future<bool> _onWillPop() async {
+    if (_selectedIndex != 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return false;
+    } else {
+      final now = DateTime.now();
+      if (lastPressed == null ||
+          now.difference(lastPressed!) > Duration(seconds: 2)) {
+        lastPressed = now;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Press back again to exit'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return false;
+      }
+      SystemNavigator.pop();
+      return true;
+    }
   }
 
   @override
@@ -75,139 +100,143 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
             ),
           );
         }
+
         bool isAdmin = snapshot.data == 'admin';
         List<Widget> _widgetOptions =
             isAdmin ? _adminWidgetOptions : _userWidgetOptions;
 
-        return Scaffold(
-          body: IndexedStack(
-            index: _selectedIndex,
-            children: _widgetOptions,
-          ),
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(width: 1.0, color: Colors.grey),
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
+        return WillPopScope(
+          onWillPop: _onWillPop,
+          child: Scaffold(
+            body: IndexedStack(
+              index: _selectedIndex,
+              children: _widgetOptions,
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1.0, color: Colors.grey),
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
               ),
-              child: BottomNavigationBar(
-                currentIndex: _selectedIndex,
-                showUnselectedLabels: true,
-                onTap: _onItemTapped,
-                selectedItemColor: Colors.blue,
-                unselectedItemColor: Colors.grey,
-                items: isAdmin
-                    ? <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 0
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/home.png'),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                child: BottomNavigationBar(
+                  currentIndex: _selectedIndex,
+                  showUnselectedLabels: true,
+                  onTap: _onItemTapped,
+                  selectedItemColor: Colors.blue,
+                  unselectedItemColor: Colors.grey,
+                  items: isAdmin
+                      ? <BottomNavigationBarItem>[
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 0
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/home.png'),
+                              ),
                             ),
+                            label: 'Beranda',
                           ),
-                          label: 'Beranda',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 1
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/doctorIcon.png'),
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 1
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/doctorIcon.png'),
+                              ),
                             ),
+                            label: 'Dokter',
                           ),
-                          label: 'Dokter',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 2
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/patient.png'),
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 2
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/patient.png'),
+                              ),
                             ),
+                            label: 'Pasien',
                           ),
-                          label: 'Pasien',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 3
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/user.png'),
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 3
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/user.png'),
+                              ),
                             ),
+                            label: 'Profil',
                           ),
-                          label: 'Profil',
-                        ),
-                      ]
-                    : <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 0
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/home.png'),
+                        ]
+                      : <BottomNavigationBarItem>[
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 0
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/home.png'),
+                              ),
                             ),
+                            label: 'Home',
                           ),
-                          label: 'Home',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 1
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/file.png'),
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 1
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/file.png'),
+                              ),
                             ),
+                            label: 'Medical',
                           ),
-                          label: 'Medical',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ColorFiltered(
-                              colorFilter: _selectedIndex == 2
-                                  ? ColorFilter.mode(
-                                      Colors.blue, BlendMode.srcIn)
-                                  : ColorFilter.mode(
-                                      Colors.grey, BlendMode.srcIn),
-                              child: Image.asset('assets/user.png'),
+                          BottomNavigationBarItem(
+                            icon: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: ColorFiltered(
+                                colorFilter: _selectedIndex == 2
+                                    ? ColorFilter.mode(
+                                        Colors.blue, BlendMode.srcIn)
+                                    : ColorFilter.mode(
+                                        Colors.grey, BlendMode.srcIn),
+                                child: Image.asset('assets/user.png'),
+                              ),
                             ),
+                            label: 'Profile',
                           ),
-                          label: 'Profile',
-                        ),
-                      ],
+                        ],
+                ),
               ),
             ),
           ),
