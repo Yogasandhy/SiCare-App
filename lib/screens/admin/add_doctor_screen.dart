@@ -24,6 +24,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   final _priceController = TextEditingController();
 
   String? _selectedShift;
+  String? _selectedPosition;
+  String? _selectedExperience;
   bool _isLoading = false;
 
   @override
@@ -79,38 +81,30 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   _buildTextField('Nama Lengkap', _nameController),
                   _buildTextField('Deskripsi', _descriptionController),
                   _buildTextField('Alumni', _alumniController),
-                  _buildTextField('Posisi', _positionController),
-                  _buildTextField('Pengalaman', _experienceController),
+                  _buildDropdownField('Posisi', _selectedPosition, [
+                    'Doctor',
+                    'Dentist',
+                    'Heart',
+                    'Ear',
+                    'Intestine',
+                    'Moon',
+                    'Brain',
+                    'Health'
+                  ]),
+                  _buildDropdownField('Pengalaman', _selectedExperience, [
+                    '5 tahun',
+                    '6 tahun',
+                    '7 tahun',
+                    '8 tahun',
+                    '9 tahun',
+                    '10 tahun+'
+                  ]),
                   _buildTextField('Lokasi', _locationController),
                   _buildTextField('Detail Lokasi', _locationDetailController),
                   _buildTextField('Harga', _priceController,
                       keyboardType: TextInputType.number),
-                  DropdownButtonFormField<String>(
-                    value: _selectedShift,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedShift = value;
-                      });
-                    },
-                    items: ['Shift 1', 'Shift 2', 'Shift 3']
-                        .map((shift) => DropdownMenuItem(
-                              value: shift,
-                              child: Text(shift),
-                            ))
-                        .toList(),
-                    decoration: InputDecoration(
-                      labelText: 'Shift',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Silakan pilih shift';
-                      }
-                      return null;
-                    },
-                  ),
+                  _buildDropdownField('Shift', _selectedShift,
+                      ['Shift 1', 'Shift 2', 'Shift 3']),
                   SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () async {
@@ -129,8 +123,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                             name: _nameController.text,
                             description: _descriptionController.text,
                             alumni: _alumniController.text,
-                            position: _positionController.text,
-                            experience: _experienceController.text,
+                            position: _selectedPosition!,
+                            experience: _selectedExperience!,
                             location: _locationController.text,
                             locationDetail: _locationDetailController.text,
                             price: formattedPrice,
@@ -182,6 +176,63 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
               ),
           ],
         ));
+  }
+
+  Widget _buildDropdownField(
+      String labelText, String? selectedValue, List<String> items) {
+    bool isValidValue = selectedValue != null && items.contains(selectedValue);
+
+    List<String> dropdownItems = List.from(items);
+    if (!isValidValue && selectedValue != null) {
+      dropdownItems.add(selectedValue);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        Card(
+          color: Colors.grey[300],
+          child: DropdownButtonHideUnderline(
+            child: DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              value: isValidValue ? selectedValue : null,
+              onChanged: (value) {
+                setState(() {
+                  if (labelText == 'Posisi') {
+                    _selectedPosition = value;
+                  } else if (labelText == 'Shift') {
+                    _selectedShift = value;
+                  } else if (labelText == 'Pengalaman') {
+                    _selectedExperience = value;
+                  }
+                });
+              },
+              items: dropdownItems
+                  .map((item) => DropdownMenuItem(
+                        value: item,
+                        child: Text(item),
+                      ))
+                  .toList(),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Silakan pilih ${labelText.toLowerCase()}';
+                }
+                return null;
+              },
+            ),
+          ),
+        ),
+        SizedBox(height: 16.0),
+      ],
+    );
   }
 
   void _showImageSourceActionSheet(
