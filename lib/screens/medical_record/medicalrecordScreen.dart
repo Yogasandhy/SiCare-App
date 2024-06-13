@@ -2,10 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sicare_app/components/doctor_badge.dart';
 import 'package:sicare_app/providers/historyProvider.dart';
-import 'package:sicare_app/screens/medical_record/medical_record_detail.dart';
-
 import '../../components/transaksi_history_card.dart';
 import '../../providers/doctorProvider.dart';
 
