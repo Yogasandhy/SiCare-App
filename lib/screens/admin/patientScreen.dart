@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/history_filter_row.dart';
 import '../../components/transaksi_history_card.dart';
+import '../../components/custom_divider.dart';
 import '../../providers/historyProvider.dart';
 import '../../providers/doctorProvider.dart';
 import 'package:intl/intl.dart';
@@ -17,8 +18,11 @@ class _PatientScreenState extends State<PatientScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HistoryProvider>(context, listen: false).getAllTransactions();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<HistoryProvider>(context, listen: false)
+          .getAllTransactions();
+      Provider.of<HistoryProvider>(context, listen: false)
+          .filterAllTransactions('Aktif');
     });
   }
 
@@ -38,64 +42,66 @@ class _PatientScreenState extends State<PatientScreen> {
           Consumer<HistoryProvider>(
             builder: (context, value, child) {
               if (value.allTransactionsFiltered.isEmpty) {
-                return Center(child: Text('No transactions found'));
+                return Expanded(
+                  child: Center(child: Text('No transactions found')),
+                );
               }
 
-              // Sort transactions by date in descending order
-              value.allTransactionsFiltered.sort((a, b) {
-                DateTime dateA = a['created_at'].toDate();
-                DateTime dateB = b['created_at'].toDate();
-                return dateB.compareTo(dateA); // Sort in descending order
-              });
-
               return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ListView.builder(
-                    itemCount: value.allTransactionsFiltered.length,
-                    itemBuilder: (context, index) {
-                      var transaction = value.allTransactionsFiltered[index];
-                      var doctorId = transaction['doctor_id'];
-                      DateTime createdAt = transaction['created_at'].toDate();
-                      String formattedDate =
-                          DateFormat('dd MMM yyyy').format(createdAt);
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await Provider.of<HistoryProvider>(context, listen: false)
+                        .refreshTransactions();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ListView.builder(
+                      itemCount: value.allTransactionsFiltered.length,
+                      itemBuilder: (context, index) {
+                        var transaction = value.allTransactionsFiltered[index];
+                        var doctorId = transaction['doctor_id'];
+                        DateTime createdAt = transaction['created_at'].toDate();
+                        String formattedDate =
+                            DateFormat('dd MMM yyyy').format(createdAt);
 
-                      // Show divider if it's the first transaction or the date is different from the previous transaction
-                      bool showDivider = index == 0 ||
-                          DateFormat('dd MMM yyyy').format(value
-                                  .allTransactionsFiltered[index - 1]
-                                      ['created_at']
-                                  .toDate()) !=
-                              formattedDate;
+                        // Show divider if it's the first transaction or the date is different from the previous transaction
+                        bool showDivider = index == 0 ||
+                            DateFormat('dd MMM yyyy').format(
+                                  value.allTransactionsFiltered[index - 1]
+                                          ['created_at']
+                                      .toDate(),
+                                ) !=
+                                formattedDate;
 
-                      return Column(
-                        children: [
-                          if (showDivider) CustomDivider(text: formattedDate),
-                          FutureBuilder(
-                            future: doctorProvider.getDoctor(doctorId),
-                            builder: (context, snapshot) {
-                              var doctorData = snapshot.data;
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
+                        return Column(
+                          children: [
+                            if (showDivider) CustomDivider(text: formattedDate),
+                            FutureBuilder(
+                              future: doctorProvider.getDoctor(doctorId),
+                              builder: (context, snapshot) {
+                                var doctorData = snapshot.data;
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 14),
+                                  child: TransaksiHistoryCard(
+                                    data: {
+                                      'doctor_data': doctorData,
+                                      'history_data': transaction,
+                                    },
+                                    isAdmin: true,
+                                  ),
                                 );
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 14),
-                                child: TransaksiHistoryCard(
-                                  data: {
-                                    'doctor_data': doctorData,
-                                    'history_data': transaction,
-                                  },
-                                  isAdmin: true,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               );
@@ -103,42 +109,6 @@ class _PatientScreenState extends State<PatientScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class CustomDivider extends StatelessWidget {
-  final String text;
-
-  const CustomDivider({Key? key, required this.text}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Divider(
-            color: Colors.grey.shade300,
-            thickness: 1,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Divider(
-            color: Colors.grey.shade300,
-            thickness: 1,
-          ),
-        ),
-      ],
     );
   }
 }

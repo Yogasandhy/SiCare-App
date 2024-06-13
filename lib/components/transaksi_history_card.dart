@@ -254,6 +254,15 @@ class TransaksiHistoryCard extends StatelessWidget {
                               },
                             );
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xff0E82FD),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: Color(0xff0E82FD),
+                                )),
+                          ),
                           child: Text('Selesai'))
                       : Container(),
                 ],

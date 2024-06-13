@@ -19,6 +19,7 @@ class HistoryProvider extends ChangeNotifier {
   void filterHistory(String status) {
     userFilteredHistory =
         userHistory.where((element) => element['status'] == status).toList();
+    _sortByDate(userFilteredHistory);
     notifyListeners();
   }
 
@@ -26,6 +27,7 @@ class HistoryProvider extends ChangeNotifier {
     allTransactionsFiltered = allTransactions
         .where((element) => element['status'] == status)
         .toList();
+    _sortByDate(allTransactionsFiltered);
     notifyListeners();
   }
 
@@ -47,6 +49,7 @@ class HistoryProvider extends ChangeNotifier {
       final transactions = await _firestore.collection('transactions').get();
       allTransactions =
           transactions.docs.map((e) => {...e.data(), 'id': e.id}).toList();
+      filterAllTransactions(selectedHistory); // Filter after fetching
       notifyListeners();
     } catch (e) {
       print(e);
@@ -100,5 +103,24 @@ class HistoryProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> refreshTransactions() async {
+    await getAllTransactions();
+    notifyListeners();
+  }
+
+  Future<void> refreshUserHistory() async {
+    await getHistory();
+    filterHistory(selectedHistory);
+    notifyListeners();
+  }
+
+  void _sortByDate(List transactions) {
+    transactions.sort((a, b) {
+      DateTime dateA = a['created_at'].toDate();
+      DateTime dateB = b['created_at'].toDate();
+      return dateB.compareTo(dateA); // Sort in descending order
+    });
   }
 }
