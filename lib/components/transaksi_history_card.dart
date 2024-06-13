@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/historyProvider.dart';
 import '../screens/medical_record/medical_record_detail.dart';
 import 'doctor_badge.dart';
 
@@ -7,12 +9,15 @@ class TransaksiHistoryCard extends StatelessWidget {
   const TransaksiHistoryCard({
     super.key,
     required this.data,
+    this.isAdmin = false,
   });
 
   final Map<String, dynamic> data;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
+    final historyProvider = Provider.of<HistoryProvider>(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -144,7 +149,113 @@ class TransaksiHistoryCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ElevatedButton(onPressed: (){}, child: Text('Selesai'))
+                  isAdmin && data['history_data']['status'] == 'Aktif'
+                      ? ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  actionsPadding: EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 14),
+                                  title: Text(
+                                    'Finish scheduled appointment?',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    'You will permanently finish this appointment.',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xff7A7A7A),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: BorderSide(
+                                              color: Color(0xff0E82FD),
+                                            )),
+                                      ),
+                                      child: Text(
+                                        'No, Cancel',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Color(0xff0E82FD),
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        try {
+                                          historyProvider.finishBooking(
+                                              data['history_data']['id']);
+                                          //show success message on snackbar
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Appointment finished successfully',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              backgroundColor:
+                                                  Color(0xff0E82FD),
+                                            ),
+                                          );
+                                          Navigator.pop(context);
+                                        } catch (e) {
+                                          //show error message on snackbar
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Failed to cancel appointment',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xff0E82FD),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: BorderSide(
+                                              color: Color(0xff0E82FD),
+                                            )),
+                                      ),
+                                      child: Text(
+                                        'Yes, Continue',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Text('Selesai'))
+                      : Container(),
                 ],
               )
             ],

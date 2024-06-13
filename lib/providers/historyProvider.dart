@@ -89,4 +89,16 @@ class HistoryProvider extends ChangeNotifier {
       print(e);
     }
   }
+
+  // change status to selesai
+  Future<void> finishBooking(String id) async {
+    try {
+      await _firestore.collection('transactions').doc(id).update({
+        'status': 'Selesai',
+      });
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

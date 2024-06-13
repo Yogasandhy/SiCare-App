@@ -88,6 +88,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                     'doctor_data': doctorData,
                                     'history_data': transaction,
                                   },
+                                  isAdmin: true,
                                 ),
                               );
                             },
