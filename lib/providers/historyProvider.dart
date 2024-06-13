@@ -6,6 +6,7 @@ class HistoryProvider extends ChangeNotifier {
   var userHistory = [];
   var userFilteredHistory = [];
   var allTransactions = [];
+  var allTransactionsFiltered = [];
   var selectedHistory = 'Aktif';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,6 +19,13 @@ class HistoryProvider extends ChangeNotifier {
   void filterHistory(String status) {
     userFilteredHistory =
         userHistory.where((element) => element['status'] == status).toList();
+    notifyListeners();
+  }
+
+  void filterAllTransactions(String status) {
+    allTransactionsFiltered = allTransactions
+        .where((element) => element['status'] == status)
+        .toList();
     notifyListeners();
   }
 
