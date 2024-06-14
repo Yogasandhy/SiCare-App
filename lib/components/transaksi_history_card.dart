@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sicare_app/screens/home/bottomnavbar.dart';
 
 import '../providers/historyProvider.dart';
 import '../screens/medical_record/medical_record_detail.dart';
@@ -214,7 +215,14 @@ class TransaksiHistoryCard extends StatelessWidget {
                                                   Color(0xff0E82FD),
                                             ),
                                           );
-                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BottomnavbarScreen(
+                                                  indexHalaman: 2,
+                                                ),
+                                              ));
                                         } catch (e) {
                                           //show error message on snackbar
                                           ScaffoldMessenger.of(context)
