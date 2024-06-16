@@ -44,6 +44,7 @@ class PatientScreen extends StatelessWidget {
                       age: userData['age'] != null
                           ? '${userData['age']} years old'
                           : 'Age unknown',
+                      id: user.id,
                     );
                   },
                 );
@@ -61,12 +62,14 @@ class UserCard extends StatelessWidget {
   final String photoURL;
   final String gender;
   final String age;
+  final String id;
 
   const UserCard({
     required this.displayName,
     required this.photoURL,
     required this.gender,
     required this.age,
+    required this.id,
   });
 
   @override
@@ -162,7 +165,9 @@ class UserCard extends StatelessWidget {
                   width: 10.0,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    print("User ID: $id");
+                  },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.red,

@@ -201,7 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     TextField(
                       controller: _addressController,
-                      maxLines: null, 
+                      maxLines: null,
                       decoration: InputDecoration(
                         hintText: 'Input your address here',
                         border: OutlineInputBorder(),
@@ -224,7 +224,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: DropdownButtonFormField<String>(
-                        value: _genderController.text,
+                        value: ['Male', 'Female', null]
+                                .contains(_genderController.text)
+                            ? _genderController.text
+                            : null,
                         decoration: InputDecoration(
                           hintText: 'Select gender',
                           border: InputBorder.none,
