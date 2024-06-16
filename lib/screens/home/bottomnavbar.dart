@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sicare_app/providers/historyProvider.dart';
+import 'package:sicare_app/screens/admin/appointment_screen.dart';
 import 'package:sicare_app/screens/medical_record/medicalrecordScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/admin/doctorScreen.dart';
@@ -43,7 +44,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
         HomeScreen(isAdmin: true),
         DoctorScreen(),
         PatientScreen(),
-        ProfileScreen(),
+        AppointmentScreen(),
       ];
 
   List<Widget> get _userWidgetOptions => [
@@ -191,10 +192,10 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                         Colors.blue, BlendMode.srcIn)
                                     : ColorFilter.mode(
                                         Colors.grey, BlendMode.srcIn),
-                                child: Image.asset('assets/user.png'),
+                                child: Image.asset('assets/file.png'),
                               ),
                             ),
-                            label: 'Profil',
+                            label: 'Appointment',
                           ),
                         ]
                       : <BottomNavigationBarItem>[
@@ -224,7 +225,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                 child: Image.asset('assets/file.png'),
                               ),
                             ),
-                            label: 'Medical',
+                            label: 'Appointment',
                           ),
                           BottomNavigationBarItem(
                             icon: Padding(

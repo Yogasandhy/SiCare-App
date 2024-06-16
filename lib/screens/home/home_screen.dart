@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sicare_app/components/custom_appbar.dart';
 import 'package:sicare_app/screens/admin/add_doctor_screen.dart';
 import '../../components/doctor_card.dart';
 import '../../providers/doctorProvider.dart';
@@ -75,9 +76,8 @@ class _HomeScreenState extends State<HomeScreen>
     super.build(context); // Add this line
     final doctorP = Provider.of<DoctorProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset('assets/mainlogobiru.png', fit: BoxFit.cover),
-        automaticallyImplyLeading: false,
+      appBar: CustomAppBar(
+        isAdmin: widget.isAdmin,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -195,39 +195,6 @@ class _HomeScreenState extends State<HomeScreen>
                     'Doctors',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  widget.isAdmin
-                      ? ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddDoctorScreen(),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(120, 40),
-                            backgroundColor: Color(0xff0E82FD),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0)),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              Text('Add Doctor',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white)),
-                            ],
-                          ))
-                      : Container(),
                 ],
               ),
               SizedBox(height: 10.0),

@@ -61,7 +61,6 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: EdgeInsets.all(10.0),

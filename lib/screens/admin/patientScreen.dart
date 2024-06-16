@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sicare_app/components/custom_appbar.dart';
 import '../../components/history_filter_row.dart';
 import '../../components/transaksi_history_card.dart';
 import '../../components/custom_divider.dart';
@@ -31,8 +32,8 @@ class _PatientScreenState extends State<PatientScreen> {
     final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Patient Dashboard'),
+      appBar: CustomAppBar(
+        isAdmin: true,
       ),
       body: Column(
         children: [
