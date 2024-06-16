@@ -21,15 +21,17 @@ class ProfileProvider extends ChangeNotifier {
     String? name,
     String? phoneNumber,
     String? password,
-    String? photoUrl,
+    String? photoURL,
   }) async {
-    // Update user data in Firestore
     Map<String, String> updatedData = {};
     if (name != null && name.isNotEmpty) {
       updatedData['displayName'] = name;
     }
     if (phoneNumber != null && phoneNumber.isNotEmpty) {
       updatedData['phoneNumber'] = phoneNumber;
+    }
+    if (photoURL != null && photoURL.isNotEmpty) {
+      updatedData['photoURL'] = photoURL;
     }
     if (updatedData.isNotEmpty) {
       await _firestore
@@ -43,8 +45,8 @@ class ProfileProvider extends ChangeNotifier {
       await _auth.currentUser?.updatePassword(password);
     }
 
-    if (photoUrl != null && photoUrl.isNotEmpty) {
-      await _auth.currentUser?.updatePhotoURL(photoUrl);
+    if (photoURL != null && photoURL.isNotEmpty) {
+      await _auth.currentUser?.updatePhotoURL(photoURL);
     }
     notifyListeners();
   }
@@ -55,8 +57,7 @@ class ProfileProvider extends ChangeNotifier {
     final ref = _storage.ref().child('profile_pictures/${user.uid}');
     await ref.putFile(image);
     final url = await ref.getDownloadURL();
-    await _auth.currentUser?.updatePhotoURL(url);
-    notifyListeners();
+    await updateUserProfile(photoURL: url);
     return url;
   }
 }

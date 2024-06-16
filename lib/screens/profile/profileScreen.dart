@@ -4,7 +4,6 @@ import 'package:sicare_app/screens/opening/welcomeScreen.dart';
 import 'package:sicare_app/screens/profile/editProfileScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../providers/Auth.dart';
 import '../../providers/profileProvider.dart';
 

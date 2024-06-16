@@ -1,6 +1,4 @@
-// EditProfileScreen.dart
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,6 +63,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text('Updating...'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final profile = Provider.of<ProfileProvider>(context);
@@ -119,27 +143,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   context: context,
                                   builder: (context) => BottomSheet(
                                     onClosing: () {},
-                                    builder: (context) => Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        TextButton.icon(
-                                          icon: Icon(Icons.camera),
-                                          label: Text('Camera'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _getImage(ImageSource.camera);
-                                          },
-                                        ),
-                                        TextButton.icon(
-                                          icon: Icon(Icons.photo),
-                                          label: Text('Gallery'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _getImage(ImageSource.gallery);
-                                          },
-                                        ),
-                                      ],
+                                    builder: (context) => SafeArea(
+                                      child: Wrap(
+                                        children: [
+                                          ListTile(
+                                            leading: Icon(Icons.camera_alt),
+                                            title: Text('Kamera'),
+                                            onTap: () {
+                                              _getImage(ImageSource.camera);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.photo_library),
+                                            title: Text('Galeri'),
+                                            onTap: () {
+                                              _getImage(ImageSource.gallery);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -186,35 +210,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       onPressed: () async {
                         try {
+                          _showLoadingDialog(context);
                           if (_imageFile != null) {
                             await profile
-                                .updateProfilePicture(_imageFile!.path)
-                                .then((value) {
-                              profile.updateUserProfile(
-                                name: _nameController.text,
-                                phoneNumber: _phoneController.text,
-                                password: _passwordController.text,
-                                photoUrl: value,
-                              );
-                            });
-                          } else {
-                            profile.updateUserProfile(
-                              name: _nameController.text,
-                              phoneNumber: _phoneController.text,
-                              password: _passwordController.text,
-                            );
+                                .updateProfilePicture(_imageFile!.path);
                           }
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Profile updated successfully!')),
+                          await profile.updateUserProfile(
+                            name: _nameController.text,
+                            phoneNumber: _phoneController.text,
+                            password: _passwordController.text.isNotEmpty
+                                ? _passwordController.text
+                                : null,
                           );
-                          Navigator.of(context).pop();
+                          _hideLoadingDialog(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Profile updated successfully'),
+                          ));
+                          Navigator.pop(context);
                         } catch (e) {
-                          print(e);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Failed to update profile: $e')),
-                          );
+                          _hideLoadingDialog(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Failed to update profile: $e'),
+                          ));
+                          print('Failed to update profile: $e');
                         }
                       },
                       child: Text(

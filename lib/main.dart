@@ -5,6 +5,7 @@ import 'package:sicare_app/providers/AddDoctorProvider.dart';
 import 'package:sicare_app/providers/doctorProvider.dart';
 import 'package:sicare_app/providers/historyProvider.dart';
 import 'package:sicare_app/providers/profileProvider.dart';
+import 'package:sicare_app/providers/userDataProvider.dart';
 import 'package:sicare_app/screens/opening/splashScreen.dart';
 import 'package:sicare_app/firebase_options.dart';
 import 'package:sicare_app/providers/Auth.dart';
@@ -53,6 +54,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => AddDoctorProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => (UserProvider())  ,
         ),
       ],
       child: WillPopScope(
