@@ -8,6 +8,7 @@ class ProfileProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
   User get user => _auth.currentUser!;
 
   Stream<DocumentSnapshot> getUserData() {
@@ -22,16 +23,26 @@ class ProfileProvider extends ChangeNotifier {
     String? phoneNumber,
     String? password,
     String? photoURL,
+    String? address,
+    String? gender,
+    String? age,
   }) async {
-    Map<String, String> updatedData = {};
+    Map<String, dynamic> updatedData = {};
+
     if (name != null && name.isNotEmpty) {
       updatedData['displayName'] = name;
     }
     if (phoneNumber != null && phoneNumber.isNotEmpty) {
       updatedData['phoneNumber'] = phoneNumber;
     }
-    if (photoURL != null && photoURL.isNotEmpty) {
-      updatedData['photoURL'] = photoURL;
+    if (address != null && address.isNotEmpty) {
+      updatedData['address'] = address;
+    }
+    if (gender != null && gender.isNotEmpty) {
+      updatedData['gender'] = gender;
+    }
+    if (age != null && age.isNotEmpty) {
+      updatedData['age'] = age;
     }
     if (updatedData.isNotEmpty) {
       await _firestore
@@ -40,7 +51,6 @@ class ProfileProvider extends ChangeNotifier {
           .update(updatedData);
     }
 
-    // Update password in Firebase Auth
     if (password != null && password.isNotEmpty) {
       await _auth.currentUser?.updatePassword(password);
     }
@@ -48,10 +58,10 @@ class ProfileProvider extends ChangeNotifier {
     if (photoURL != null && photoURL.isNotEmpty) {
       await _auth.currentUser?.updatePhotoURL(photoURL);
     }
+
     notifyListeners();
   }
 
-  // Update Profile Picture if user uploads a new one
   Future<String> updateProfilePicture(String imagePath) async {
     File image = File(imagePath);
     final ref = _storage.ref().child('profile_pictures/${user.uid}');

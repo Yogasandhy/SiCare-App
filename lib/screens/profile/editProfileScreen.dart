@@ -1,16 +1,15 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sicare_app/components/custom_text_field.dart';
-import 'package:sicare_app/providers/profileProvider.dart';
+import '../../components/custom_text_field.dart';
+import '../../providers/profileProvider.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({super.key});
+  EditProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -20,6 +19,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  late TextEditingController _addressController;
+  late TextEditingController _genderController;
+  late TextEditingController _ageController;
   late Future<Map<String, dynamic>> _userDataFuture;
 
   @override
@@ -29,17 +31,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _phoneController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _addressController = TextEditingController();
+    _genderController = TextEditingController();
+    _ageController = TextEditingController();
     _userDataFuture = _loadUserData();
   }
 
   Future<Map<String, dynamic>> _loadUserData() async {
     final profile = Provider.of<ProfileProvider>(context, listen: false);
-    DocumentSnapshot userDoc = await profile.getUserData().first;
+    final userDoc = await profile.getUserData().first;
     var data = userDoc.data() as Map<String, dynamic>;
 
-    _nameController.text = data['displayName'];
-    _phoneController.text = data['phoneNumber'];
-    _emailController.text = data['email'];
+    _nameController.text = data['displayName'] ?? '';
+    _phoneController.text = data['phoneNumber'] ?? '';
+    _emailController.text = data['email'] ?? '';
+    _addressController.text = data['address'] ?? '';
+    _genderController.text = data['gender'] ?? '';
+    _ageController.text = data['age'] ?? '';
+
     return data;
   }
 
@@ -60,6 +69,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _addressController.dispose();
+    _genderController.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
@@ -179,6 +191,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       placeholder: 'Full Name',
                     ),
                     SizedBox(height: 20),
+                    Text(
+                      'Address',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextField(
+                      controller: _addressController,
+                      maxLines: null, 
+                      decoration: InputDecoration(
+                        hintText: 'Input your address here',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Gender',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: DropdownButtonFormField<String>(
+                        value: _genderController.text,
+                        decoration: InputDecoration(
+                          hintText: 'Select gender',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _genderController.text = value!;
+                          });
+                        },
+                        items: ['Male', 'Female']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    CustomTextField(
+                      controller: _ageController,
+                      hintText: 'Input your age here',
+                      placeholder: 'Age',
+                    ),
+                    SizedBox(height: 20),
                     CustomTextField(
                       controller: _phoneController,
                       hintText: 'Input your phone number here',
@@ -221,6 +292,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             password: _passwordController.text.isNotEmpty
                                 ? _passwordController.text
                                 : null,
+                            address: _addressController.text,
+                            gender: _genderController.text,
+                            age: _ageController.text,
                           );
                           _hideLoadingDialog(context);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
