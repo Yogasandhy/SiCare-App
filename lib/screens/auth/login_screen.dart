@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/components/custom_text_field.dart';
+import 'package:sicare_app/screens/auth/forgotPassword.dart';
 import 'package:sicare_app/screens/home/bottomnavbar.dart';
 import 'package:sicare_app/screens/auth/register_screen.dart';
 import '../../providers/Auth.dart';
@@ -94,7 +95,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // Navigator.pushNamed(context, '/forgot-password');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ForgotPasswordPage(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Forgot Password?',

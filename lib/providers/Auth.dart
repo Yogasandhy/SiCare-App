@@ -172,4 +172,17 @@ class Auth with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userRole') ?? 'user';
   }
+
+  // Fungsi untuk mengirim link reset password
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw 'Tidak ada pengguna yang ditemukan dengan email tersebut.';
+      } else {
+        throw 'Terjadi kesalahan saat mengirim email reset password. Silakan coba lagi.';
+      }
+    }
+  }
 }
