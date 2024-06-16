@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../providers/AddDoctorProvider.dart';
 import 'dart:io';
-import 'package:intl/intl.dart'; // import package intl
+import 'package:intl/intl.dart'; 
 
 class AddDoctorScreen extends StatefulWidget {
   const AddDoctorScreen({super.key});
@@ -17,8 +17,6 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _alumniController = TextEditingController();
-  final _positionController = TextEditingController();
-  final _experienceController = TextEditingController();
   final _locationController = TextEditingController();
   final _locationDetailController = TextEditingController();
   final _priceController = TextEditingController();

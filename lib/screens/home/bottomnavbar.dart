@@ -42,7 +42,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
   List<Widget> get _adminWidgetOptions => [
         HomeScreen(isAdmin: true),
         DoctorScreen(),
-        Patientscreen(),
+        PatientScreen(),
         ProfileScreen(),
       ];
 
@@ -104,6 +104,11 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
         bool isAdmin = snapshot.data == 'admin';
         List<Widget> _widgetOptions =
             isAdmin ? _adminWidgetOptions : _userWidgetOptions;
+
+        // Ensure the selected index is valid
+        if (_selectedIndex >= _widgetOptions.length) {
+          _selectedIndex = 0;
+        }
 
         return WillPopScope(
           onWillPop: _onWillPop,
