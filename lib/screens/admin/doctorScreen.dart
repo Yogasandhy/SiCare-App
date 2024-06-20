@@ -6,14 +6,14 @@ import '../../providers/doctorProvider.dart';
 import 'add_doctor_screen.dart';
 
 class DoctorScreen extends StatefulWidget {
-  const DoctorScreen({Key? key});
+  const DoctorScreen({super.key});
 
   @override
   State<DoctorScreen> createState() => _DoctorScreenState();
 }
 
 class _DoctorScreenState extends State<DoctorScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   List<Map<String, dynamic>> _searchResults = [];
 
@@ -42,9 +42,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        isAdmin: true,
-      ),
+      appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -58,12 +56,12 @@ class _DoctorScreenState extends State<DoctorScreen> {
               hintText: 'Cari Dokter',
               controller: _searchController,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Doctors',
+                const Text(
+                  'Dokter',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -79,12 +77,12 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      minimumSize: Size(120, 40),
-                      backgroundColor: Color(0xff0E82FD),
+                      minimumSize: const Size(120, 40),
+                      backgroundColor: const Color(0xff0E82FD),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16.0)),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.add,
@@ -93,7 +91,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         SizedBox(
                           width: 5.0,
                         ),
-                        Text('Add Doctor',
+                        Text('Tambah Dokter',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -102,7 +100,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     ))
               ],
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             if (_isSearching) ...[
               Expanded(
                 child: RefreshIndicator(

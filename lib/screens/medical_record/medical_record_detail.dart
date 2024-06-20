@@ -14,7 +14,7 @@ class MedicalRecordDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Booking Details',
+          'Detail Janji Temu',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
@@ -36,242 +36,281 @@ class MedicalRecordDetail extends StatelessWidget {
             );
           }
           final userData = (snapshot.data as dynamic).data();
-          print(userData);
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // doctor profile card
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      //doctor image
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
-                            data['doctor_data']['imageUrl'],
-                            height: 120,
-                            width: 120,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      //doctor details
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data['doctor_data']['nama'],
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            data['doctor_data']['posisi'],
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                size: 16,
-                                color: Color(0xFF0E82FD),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                data['doctor_data']['lokasi'],
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // doctor profile card
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        //doctor image
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
                             ],
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Divider(
-                color: Color(0xffD3D3D3).withOpacity(0.3),
-                thickness: 8,
-              ),
-              // Booking details
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 14,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // title
-                      const Text(
-                        'Scheduled Appointment',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.network(
+                              data['doctor_data']['imageUrl'],
+                              height: 120,
+                              width: 120,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      // date and time
-                      ScheduleText(
-                        title: 'Date & Hour',
-                        doubleText: true,
-                        date: data['history_data']['date'],
-                        time: data['history_data']['time'],
-                      ),
-                      const SizedBox(height: 20),
-                      ScheduleText(
-                        title: 'Duration',
-                        singleText: '1 Hour',
-                      ),
-                      const SizedBox(height: 20),
-                      ScheduleText(
-                        title: 'Total Ammount',
-                        singleText: 'Rp. ${data['history_data']['price']}',
-                      ),
-                      const SizedBox(height: 20),
-                      ScheduleText(
-                        title: 'Payment',
-                        singleText: data['history_data']['payment_method']
-                                .substring(0, 1)
-                                .toUpperCase() +
-                            data['history_data']['payment_method'].substring(1),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Divider(
-                color: Color(0xffD3D3D3).withOpacity(0.3),
-                thickness: 8,
-              ),
-              // Patient details
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //title
-                      const Text(
-                        'Patient Info.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // patient name
-                      ScheduleText(
-                        title: 'Full Name',
-                        singleText: userData['displayName'],
-                      ),
-                      const SizedBox(height: 20),
-                      // patient gender
-                      ScheduleText(
-                        title: 'Gender',
-                        singleText:
-                            userData['gender'] == '' ? '-' : userData['gender'],
-                      ),
-                      const SizedBox(height: 20),
-                      // patient age
-                      ScheduleText(
-                        title: 'Age',
-                        singleText:
-                            userData['age'] == '' ? '-' : userData['age'],
-                      ),
-                      const SizedBox(height: 20),
-                      // patient diagnosis
-                      ScheduleText(
-                        title: 'Diagnosis',
-                        singleText: data['history_data']['diagnosis'],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Spacer(),
-              //button cancel appointment
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      data['history_data']['status'] == 'Aktif'
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CancelBookingScreen(
-                                  documentId: data['history_data']['id'],
-                                  availableDocumentId: data['history_data']
-                                      ['available_dates_id'],
-                                  time: data['history_data']['time'],
+                        const SizedBox(width: 14),
+                        //doctor details
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['doctor_data']['nama'],
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              data['doctor_data']['posisi'],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: Color(0xFF0E82FD),
                                 ),
-                              ))
-                          : null;
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 56),
-                      backgroundColor: data['history_data']['status'] == 'Aktif'
-                          ? Color(0xff0E82FD)
-                          : Colors.grey.withOpacity(0.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Text(
-                      'Cancel Appointment',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  data['doctor_data']['lokasi'],
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),
-              )
-            ],
+                Divider(
+                  color: Color(0xffD3D3D3).withOpacity(0.3),
+                  thickness: 8,
+                ),
+                // Booking details
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // title
+                        const Text(
+                          'Jadwal Janji Temu',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // date and time
+                        ScheduleText(
+                          title: 'Tanggal & Waktu',
+                          doubleText: true,
+                          date: data['history_data']['date'],
+                          time: data['history_data']['time'],
+                        ),
+                        const SizedBox(height: 20),
+                        ScheduleText(
+                          title: 'Durasi',
+                          singleText: '1 Jam',
+                        ),
+                        const SizedBox(height: 20),
+                        ScheduleText(
+                          title: 'Total Biaya',
+                          singleText: 'Rp. ${data['history_data']['price']}',
+                        ),
+                        const SizedBox(height: 20),
+                        ScheduleText(
+                          title: 'Pembayaran',
+                          singleText: data['history_data']['payment_method']
+                                  .substring(0, 1)
+                                  .toUpperCase() +
+                              data['history_data']['payment_method']
+                                  .substring(1),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Color(0xffD3D3D3).withOpacity(0.3),
+                  thickness: 8,
+                ),
+                // Patient details
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //title
+                        const Text(
+                          'Detail Pasien',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // patient name
+                        ScheduleText(
+                          title: 'Nama Lengkap',
+                          singleText: userData['displayName'],
+                        ),
+                        const SizedBox(height: 20),
+                        // patient gender
+                        ScheduleText(
+                          title: 'Jenis Kelamin',
+                          singleText: userData['gender'] == ''
+                              ? '-'
+                              : (userData['gender'] == 'Male'
+                                  ? 'Laki-Laki'
+                                  : (userData['gender'] == 'Female'
+                                      ? 'Perempuan'
+                                      : '-')),
+                        ),
+                        const SizedBox(height: 20),
+                        // patient age
+                        ScheduleText(
+                          title: 'Umur',
+                          singleText:
+                              userData['age'] == '' ? '-' : userData['age'],
+                        ),
+                        const SizedBox(height: 20),
+                        // patient diagnosis
+                        ScheduleText(
+                          title: 'Diagnosis',
+                          singleText: data['history_data']['diagnosis'],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Color(0xffD3D3D3).withOpacity(0.3),
+                  thickness: 8,
+                ),
+                const SizedBox(height: 10),
+                //Reason for cancelling appointment
+                (data['history_data']['status'] == 'Dibatalkan')
+                    ? Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Alasan Dibatalkan',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                              const SizedBox(height: 20),
+                              Text(
+                                data['history_data']['reason'],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(height: 10),
+                Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        data['history_data']['status'] == 'Aktif'
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CancelBookingScreen(
+                                    documentId: data['history_data']['id'],
+                                    availableDocumentId: data['history_data']
+                                        ['available_dates_id'],
+                                    time: data['history_data']['time'],
+                                  ),
+                                ))
+                            : null;
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 56),
+                        backgroundColor:
+                            data['history_data']['status'] == 'Aktif'
+                                ? Color(0xff0E82FD)
+                                : Colors.grey.withOpacity(0.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text(
+                        'Batalkan Janji Temu',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           );
         },
       ),

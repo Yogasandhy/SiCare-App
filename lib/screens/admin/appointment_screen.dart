@@ -32,9 +32,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        isAdmin: true,
-      ),
+      appBar: CustomAppBar(),
       body: Column(
         children: [
           const HistoryFilterRow(

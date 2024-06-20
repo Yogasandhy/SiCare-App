@@ -110,7 +110,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Edit Profile Information'),
+        title: Text(
+          'Ubah Informasi Profil',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
@@ -187,12 +194,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     CustomTextField(
                       controller: _nameController,
-                      hintText: 'Input your name here',
-                      placeholder: 'Full Name',
+                      hintText: 'Masukkan nama lengkap Anda',
+                      placeholder: 'Nama Lengkap',
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'Address',
+                      'Alamat',
                       style: TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 16.0),
                     ),
@@ -203,13 +210,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: _addressController,
                       maxLines: null,
                       decoration: InputDecoration(
-                        hintText: 'Input your address here',
+                        hintText: 'Masukkan alamat Anda di sini',
                         border: OutlineInputBorder(),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'Gender',
+                      'Jenis Kelamin',
                       style: TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 16.0),
                     ),
@@ -229,7 +236,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ? _genderController.text
                             : null,
                         decoration: InputDecoration(
-                          hintText: 'Select gender',
+                          hintText: 'Pilih Jenis Kelamin Anda',
                           border: InputBorder.none,
                         ),
                         onChanged: (value) {
@@ -241,7 +248,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(
+                                value == 'Male' ? 'Laki-laki' : 'Perempuan'),
                           );
                         }).toList(),
                       ),
@@ -249,14 +257,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(height: 20),
                     CustomTextField(
                       controller: _ageController,
-                      hintText: 'Input your age here',
-                      placeholder: 'Age',
+                      hintText: 'Masukkan umur Anda',
+                      placeholder: 'Umur Anda',
                     ),
                     SizedBox(height: 20),
                     CustomTextField(
                       controller: _phoneController,
-                      hintText: 'Input your phone number here',
-                      placeholder: 'Phone Number',
+                      hintText: 'Masukkan nomor telepon Anda',
+                      placeholder: 'Nomor Telepon',
                       isPhone: true,
                     ),
                     SizedBox(height: 20),
@@ -270,7 +278,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     CustomTextField(
                       controller: _passwordController,
                       hintText: '*******',
-                      placeholder: 'Change Password',
+                      placeholder: 'Ganti Password Anda',
                       isPassword: true,
                     ),
                     SizedBox(height: 20),

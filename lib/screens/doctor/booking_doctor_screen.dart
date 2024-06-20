@@ -54,8 +54,11 @@ class _BookingPageState extends State<BookingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Booking Detail',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Detail Pemesanan',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            )),
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -135,7 +138,7 @@ class _BookingPageState extends State<BookingPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Date & Hour'),
+                    Text('Tanggal & Jam'),
                     Text('${widget.selectedDate} | ${widget.selectedTime}',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ],
@@ -144,7 +147,7 @@ class _BookingPageState extends State<BookingPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Duration'),
+                    Text('Durasi'),
                     Text('1 hour',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ],
@@ -153,7 +156,7 @@ class _BookingPageState extends State<BookingPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Amount'),
+                    Text('Biaya'),
                     Text(
                       'Rp ${NumberFormat("#,##0", "id_ID").format(double.parse((doctorData?['price'] ?? '0').replaceAll(',', '').replaceAll('.', '')))}',
                       style: TextStyle(
@@ -178,7 +181,13 @@ class _BookingPageState extends State<BookingPage> {
                 ListTile(
                   leading:
                       Image.asset('assets/payment.png', color: Colors.blue),
-                  title: Text('Select Payment Method'),
+                  title: Text(
+                    'Pilih Metode Pembayaran',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 ...paymentMethods.map((method) {
                   return PaymentMethodCard(
@@ -216,7 +225,7 @@ class _BookingPageState extends State<BookingPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Total Payment : ',
+                      Text('Total',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       Text(
@@ -282,7 +291,7 @@ class _BookingPageState extends State<BookingPage> {
                       ),
                     ),
                     child: Text(
-                      'Pay Now',
+                      'Bayar Sekarang',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,

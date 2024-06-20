@@ -75,9 +75,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.build(context); // Add this line
     final doctorP = Provider.of<DoctorProvider>(context);
     return Scaffold(
-      appBar: CustomAppBar(
-        isAdmin: widget.isAdmin,
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -116,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen>
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.isAdmin ? 'Dashboard' : 'Consultation With Doctor',
+                  widget.isAdmin ? 'Dashboard' : 'Konsultasi dengan Dokter',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -137,14 +135,14 @@ class _HomeScreenState extends State<HomeScreen>
                           return _buildCard(
                               Icons.local_hospital, 'Doctor', 'Error');
                         }
-                        return _buildCard(Icons.local_hospital, 'Doctor',
-                            '${snapshot.data} Doctors');
+                        return _buildCard(Icons.local_hospital, 'Dokter',
+                            '${snapshot.data} Dokter');
                       },
                     ),
                     SizedBox(width: 10),
-                    _buildCard(Icons.people, 'Patient', '20 Patients'),
+                    _buildCard(Icons.people, 'Pasien', '20 Patients'),
                     SizedBox(width: 10),
-                    _buildCard(Icons.assignment, 'Record', '30 Records'),
+                    _buildCard(Icons.assignment, 'Janji Temu', '30 Records'),
                   ],
                 ),
               ] else ...[
@@ -191,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Doctors',
+                    'Dokter',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ],
