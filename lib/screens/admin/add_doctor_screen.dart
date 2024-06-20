@@ -84,14 +84,13 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   _buildTextField('Deskripsi', _descriptionController),
                   _buildTextField('Alumni', _alumniController),
                   _buildDropdownField('Posisi', _selectedPosition, [
-                    'Doctor',
-                    'Dentist',
-                    'Heart',
-                    'Ear',
-                    'Intestine',
-                    'Moon',
-                    'Brain',
-                    'Health'
+                    'Umum',
+                    'Gigi',
+                    'Kardiologi',
+                    'Otologi',
+                    'Ortopendi',
+                    'Neurologi',
+                    'Usus',
                   ]),
                   _buildDropdownField('Pengalaman', _selectedExperience, [
                     '5 tahun',

@@ -239,53 +239,58 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                   SizedBox(height: 10.0),
                   ElevatedButton(
-                    onPressed: () {
-                      try {
-                        authProvider
-                            .saveTransaction(
-                          doctorId: widget.doctorId,
-                          userId: authProvider.user.uid,
-                          date: widget.selectedDate,
-                          formattedDate: widget.selectedDateFormatted,
-                          time: widget.selectedTime,
-                          price: doctorData?['price'] ?? '0',
-                          paymentMethod: selectedPaymentMethod!,
-                        )
-                            .then(
-                          (value) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PaymentPage(
-                                  bookingData: {
-                                    'doctor': doctorData,
-                                    'selectedDate': widget.selectedDate,
-                                    'selectedTime': widget.selectedTime,
-                                  },
-                                  historyId: value,
+                    onPressed: selectedPaymentMethod == null
+                        ? null
+                        : () {
+                            try {
+                              authProvider
+                                  .saveTransaction(
+                                doctorId: widget.doctorId,
+                                userId: authProvider.user.uid,
+                                date: widget.selectedDate,
+                                formattedDate: widget.selectedDateFormatted,
+                                time: widget.selectedTime,
+                                price: doctorData?['price'] ?? '0',
+                                paymentMethod: selectedPaymentMethod!,
+                              )
+                                  .then(
+                                (value) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PaymentPage(
+                                        bookingData: {
+                                          'doctor': doctorData,
+                                          'selectedDate': widget.selectedDate,
+                                          'selectedTime': widget.selectedTime,
+                                        },
+                                        historyId: value,
+                                      ),
+                                    ),
+                                  );
+                                  // show snackbar when success
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Transaction saved successfully!'),
+                                    ),
+                                  );
+                                },
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Failed to save transaction: $e'),
                                 ),
-                              ),
-                            );
-                            // show snackbar when success
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text('Transaction saved successfully!'),
-                              ),
-                            );
+                              );
+                            }
                           },
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to save transaction: $e'),
-                          ),
-                        );
-                      }
-                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 56),
-                      backgroundColor: Color(0xff0E82FD),
+                      backgroundColor: selectedPaymentMethod == null
+                          ? Colors.grey
+                          : Color(0xff0E82FD),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),

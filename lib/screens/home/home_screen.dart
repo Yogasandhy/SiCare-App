@@ -16,25 +16,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   final List<String> imagePaths = [
-    'assets/doctor.png',
-    'assets/dentist.png',
-    'assets/heart.png',
-    'assets/ear.png',
-    'assets/intestine.png',
-    'assets/moon.png',
-    'assets/brain.png',
-    'assets/health.png',
+    'assets/umum.png',
+    'assets/gigi.png',
+    'assets/kardiologi.png',
+    'assets/otologi.png',
+    'assets/ortopendi.png',
+    'assets/neurologi.png',
+    'assets/usus.png',
+    'assets/semua.png',
+    
   ];
 
   final List<String> cardLabels = [
-    'Doctor',
-    'Dentist',
-    'Heart',
-    'Ear',
-    'Intestine',
-    'Moon',
-    'Brain',
-    'Health',
+    'Umum',
+    'Gigi',
+    'Kardiologi',
+    'Otologi',
+    'Ortopendi',
+    'Neurologi',
+    'Usus',
+    'Lihat Semua',
   ];
 
   TextEditingController _searchController = TextEditingController();
@@ -140,9 +141,9 @@ class _HomeScreenState extends State<HomeScreen>
                       },
                     ),
                     SizedBox(width: 10),
-                    _buildCard(Icons.people, 'Pasien', '20 Patients'),
+                    _buildCard(Icons.people, 'Pasien', '20 Pasien'),
                     SizedBox(width: 10),
-                    _buildCard(Icons.assignment, 'Janji Temu', '30 Records'),
+                    _buildCard(Icons.assignment, 'Janji Temu', '30 Janji Temu'),
                   ],
                 ),
               ] else ...[
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                             ),
                           ),
-                          Text(cardLabels[index]),
+                          Text(cardLabels[index], style: TextStyle(fontWeight: FontWeight.w600),),
                         ],
                       ),
                     );

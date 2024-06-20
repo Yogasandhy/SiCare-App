@@ -57,7 +57,7 @@ class DoctorCard extends StatelessWidget {
                         icon: Icons.verified,
                         iconColor: Color(0xff4E4E4E),
                         iconSize: 12,
-                        title: 'Professional Doctor',
+                        title: 'Dokter Profesional',
                         color: Color(0xff6EB4FE).withOpacity(0.5),
                       ),
                       SizedBox(height: 4),

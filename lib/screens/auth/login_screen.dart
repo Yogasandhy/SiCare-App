@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(width: 20),
-                Text("Logging in..."),
+                Text("Masuk..."),
               ],
             ),
           ),
@@ -79,13 +79,13 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               CustomTextField(
                 controller: _emailController,
-                hintText: "Input your email here",
+                hintText: "Masukkan Email Anda",
                 placeholder: "Email",
               ),
               SizedBox(height: 20),
               CustomTextField(
                 controller: _passwordController,
-                hintText: "Input your password here",
+                hintText: "Masukkan Kata Sandi Anda",
                 placeholder: "Password",
                 isPassword: true,
               ),
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: Text(
-                      'Forgot Password?',
+                      'Lupa Kata Sandi?',
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Color(0xFF0E82FD),
@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _hideLoadingDialog(context); // Hide loading dialog
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Email or password is incorrect'),
+                        content: Text('Email or Kata Sandi salah'),
                       ),
                     );
                   }
@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Text(
-                  'Log in',
+                  'Masuk',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account? ",
+                    "Belum Punya Akun? ",
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.black,
@@ -186,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: Text(
-                      'Sign up',
+                      'Daftar',
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Color(0xFF0E82FD),

@@ -120,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen>
                                       child: ScaleTransition(
                                         scale: _animation,
                                         child: Text(
-                                          'Your Health, Our Priority',
+                                          'Kesehatan Kamu, Prioritas Kami!',
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.white,

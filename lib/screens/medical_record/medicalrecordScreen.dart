@@ -41,7 +41,8 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
           Consumer<HistoryProvider>(
             builder: (context, value, child) {
               if (value.userFilteredHistory.isEmpty) {
-                return Center(child: Text('No transactions found'));
+                return Expanded(
+                    child: Center(child: Text('No transactions found')));
               }
 
               return Expanded(
