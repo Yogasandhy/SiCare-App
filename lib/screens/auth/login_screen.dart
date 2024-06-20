@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Log in',
+          'Masuk',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18.0,
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
               CustomTextField(
                 controller: _passwordController,
                 hintText: "Masukkan Kata Sandi Anda",
-                placeholder: "Password",
+                placeholder: "Kata Sandi",
                 isPassword: true,
               ),
               SizedBox(height: 14),
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => RegisterScreen(),
