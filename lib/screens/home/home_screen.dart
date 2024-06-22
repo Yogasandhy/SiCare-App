@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen>
     'assets/neurologi.png',
     'assets/usus.png',
     'assets/semua.png',
-    
   ];
 
   final List<String> cardLabels = [
@@ -73,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Add this line
+    super.build(context);
     final doctorP = Provider.of<DoctorProvider>(context);
     return Scaffold(
       appBar: CustomAppBar(),
@@ -141,9 +140,38 @@ class _HomeScreenState extends State<HomeScreen>
                       },
                     ),
                     SizedBox(width: 10),
-                    _buildCard(Icons.people, 'Pasien', '20 Pasien'),
+                    FutureBuilder<int>(
+                      future: doctorP.getUserCount(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return _buildCard(
+                              Icons.people, 'Pasien', 'Loading...');
+                        }
+                        if (snapshot.hasError) {
+                          return _buildCard(Icons.people, 'Pasien', 'Error');
+                        }
+                        return _buildCard(
+                            Icons.people, 'Pasien', '${snapshot.data} Pasien');
+                      },
+                    ),
                     SizedBox(width: 10),
-                    _buildCard(Icons.assignment, 'Janji Temu', '30 Janji Temu'),
+                    FutureBuilder<int>(
+                      future: doctorP.getActiveAppointmentsCount(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return _buildCard(
+                              Icons.assignment, 'Janji Temu', 'Loading...');
+                        }
+                        if (snapshot.hasError) {
+                          return _buildCard(
+                              Icons.assignment, 'Janji Temu', 'Error');
+                        }
+                        return _buildCard(Icons.assignment, 'Janji Temu',
+                            '${snapshot.data} Aktif');
+                      },
+                    ),
                   ],
                 ),
               ] else ...[
@@ -160,6 +188,8 @@ class _HomeScreenState extends State<HomeScreen>
                           MaterialPageRoute(
                             builder: (context) => DoctorCategoryScreen(
                               category: cardLabels[index],
+                              showAllDoctors:
+                                  cardLabels[index] == 'Lihat Semua',
                             ),
                           ),
                         );
@@ -178,7 +208,10 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                             ),
                           ),
-                          Text(cardLabels[index], style: TextStyle(fontWeight: FontWeight.w600),),
+                          Text(
+                            cardLabels[index],
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ],
                       ),
                     );
@@ -196,18 +229,18 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
               SizedBox(height: 10.0),
-              FutureBuilder(
-                future: doctorP.getAllDoctorsWithAvailableDates(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (!snapshot.hasData) {
-                    return Center(child: Text('No data available'));
-                  }
-                  final doctors = snapshot.data!;
-                  return Expanded(
-                    child: RefreshIndicator(
+              Expanded(
+                child: FutureBuilder(
+                  future: doctorP.getAllDoctorsWithAvailableDates(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (!snapshot.hasData) {
+                      return Center(child: Text('No data available'));
+                    }
+                    final doctors = snapshot.data!;
+                    return RefreshIndicator(
                       onRefresh: _refreshData,
                       child: ListView.builder(
                         itemCount: doctors.length,
@@ -221,9 +254,9 @@ class _HomeScreenState extends State<HomeScreen>
                           );
                         },
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ],
           ],

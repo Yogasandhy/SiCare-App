@@ -25,6 +25,23 @@ class DoctorProvider with ChangeNotifier {
     return snapshot.docs.length;
   }
 
+  Future<int> getUserCount() async {
+    final snapshot = await _firestore.collection('users').get();
+    return snapshot.size;
+  }
+
+  Future<int> getActiveAppointmentsCount() async {
+    try {
+      final snapshot = await _firestore
+          .collection('transactions')
+          .where('status', isEqualTo: 'Aktif')
+          .get();
+      return snapshot.size;
+    } catch (e) {
+      throw Exception("Error fetching active appointments: $e");
+    }
+  }
+
   Future<Map<String, dynamic>> fetchDoctorWithDates(String id,
       {DateTime? startDate}) async {
     try {

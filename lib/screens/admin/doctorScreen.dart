@@ -22,19 +22,22 @@ class _DoctorScreenState extends State<DoctorScreen> {
     await doctorProvider.refreshDoctors();
   }
 
-  void _onSearchChanged(String value) async {
+  void _onSearchChanged(String value) {
     if (value.isEmpty) {
       setState(() {
         _isSearching = false;
         _searchResults = [];
       });
     } else {
-      final doctorProvider =
-          Provider.of<DoctorProvider>(context, listen: false);
-      final results = await doctorProvider.searchDoctorsByName(value);
       setState(() {
         _isSearching = true;
-        _searchResults = results;
+      });
+      final doctorProvider =
+          Provider.of<DoctorProvider>(context, listen: false);
+      doctorProvider.searchDoctorsByName(value).then((results) {
+        setState(() {
+          _searchResults = results;
+        });
       });
     }
   }
