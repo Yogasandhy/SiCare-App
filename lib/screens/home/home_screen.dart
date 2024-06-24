@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen>
       appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
+        child: ListView(
           children: [
             SearchBar(
               padding: const WidgetStatePropertyAll<EdgeInsets>(
@@ -229,34 +229,34 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
               SizedBox(height: 10.0),
-              Expanded(
-                child: FutureBuilder(
-                  future: doctorP.getAllDoctorsWithAvailableDates(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (!snapshot.hasData) {
-                      return Center(child: Text('No data available'));
-                    }
-                    final doctors = snapshot.data!;
-                    return RefreshIndicator(
-                      onRefresh: _refreshData,
-                      child: ListView.builder(
-                        itemCount: doctors.length,
-                        itemBuilder: (context, index) {
-                          final doctorData = doctors[index];
-                          return DoctorCard(
-                            doctorId: doctorData['id'],
-                            doctorData: doctorData,
-                            availableDates: doctorData['available_dates'],
-                            isAdmin: widget.isAdmin,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+              FutureBuilder(
+                future: doctorP.getAllDoctorsWithAvailableDates(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData) {
+                    return Center(child: Text('No data available'));
+                  }
+                  final doctors = snapshot.data!;
+                  return RefreshIndicator(
+                    onRefresh: _refreshData,
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: doctors.length,
+                      itemBuilder: (context, index) {
+                        final doctorData = doctors[index];
+                        return DoctorCard(
+                          doctorId: doctorData['id'],
+                          doctorData: doctorData,
+                          availableDates: doctorData['available_dates'],
+                          isAdmin: widget.isAdmin,
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ],
           ],
