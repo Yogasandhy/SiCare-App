@@ -30,12 +30,12 @@ class WelcomeScreen extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Your Health, ',
+                        text: 'Kesehatan Kamu, ',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: 'Our Priority',
+                        text: 'Prioritas Kami!',
                         style: TextStyle(
                             fontSize: 20,
                             color: Colors.blue,
@@ -48,10 +48,9 @@ class WelcomeScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Experience the future of healthcare',
+                    Text('Jelajahi masa depan layanan kesehatan',
                         style: TextStyle(fontSize: 16.0)),
-                    Text('management with SiCare!',
-                        style: TextStyle(fontSize: 16.0)),
+                    Text('dengan SiCare!', style: TextStyle(fontSize: 16.0)),
                   ],
                 ),
               ],
@@ -76,7 +75,7 @@ class WelcomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    child: Text('Create New Account'),
+                    child: Text('Daftar Akun Baru'),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -103,7 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text('Login'),
+                      child: Text('Masuk'),
                     ),
                   ),
                 ),

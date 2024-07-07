@@ -1,18 +1,15 @@
-// EditProfileScreen.dart
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sicare_app/components/custom_text_field.dart';
-import 'package:sicare_app/providers/profileProvider.dart';
+import '../../components/custom_text_field.dart';
+import '../../providers/profileProvider.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({super.key});
+  EditProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -22,6 +19,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  late TextEditingController _addressController;
+  late TextEditingController _genderController;
+  late TextEditingController _ageController;
   late Future<Map<String, dynamic>> _userDataFuture;
 
   @override
@@ -31,17 +31,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _phoneController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _addressController = TextEditingController();
+    _genderController = TextEditingController();
+    _ageController = TextEditingController();
     _userDataFuture = _loadUserData();
   }
 
   Future<Map<String, dynamic>> _loadUserData() async {
     final profile = Provider.of<ProfileProvider>(context, listen: false);
-    DocumentSnapshot userDoc = await profile.getUserData().first;
+    final userDoc = await profile.getUserData().first;
     var data = userDoc.data() as Map<String, dynamic>;
 
-    _nameController.text = data['displayName'];
-    _phoneController.text = data['phoneNumber'];
-    _emailController.text = data['email'];
+    _nameController.text = data['displayName'] ?? '';
+    _phoneController.text = data['phoneNumber'] ?? '';
+    _emailController.text = data['email'] ?? '';
+    _addressController.text = data['address'] ?? '';
+    _genderController.text = data['gender'] ?? '';
+    _ageController.text = data['age'] ?? '';
+
     return data;
   }
 
@@ -62,7 +69,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _addressController.dispose();
+    _genderController.dispose();
+    _ageController.dispose();
     super.dispose();
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text('Updating...'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
@@ -74,7 +110,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Edit Profile Information'),
+        title: Text(
+          'Ubah Informasi Profil',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
@@ -119,27 +162,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   context: context,
                                   builder: (context) => BottomSheet(
                                     onClosing: () {},
-                                    builder: (context) => Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        TextButton.icon(
-                                          icon: Icon(Icons.camera),
-                                          label: Text('Camera'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _getImage(ImageSource.camera);
-                                          },
-                                        ),
-                                        TextButton.icon(
-                                          icon: Icon(Icons.photo),
-                                          label: Text('Gallery'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _getImage(ImageSource.gallery);
-                                          },
-                                        ),
-                                      ],
+                                    builder: (context) => SafeArea(
+                                      child: Wrap(
+                                        children: [
+                                          ListTile(
+                                            leading: Icon(Icons.camera_alt),
+                                            title: Text('Kamera'),
+                                            onTap: () {
+                                              _getImage(ImageSource.camera);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.photo_library),
+                                            title: Text('Galeri'),
+                                            onTap: () {
+                                              _getImage(ImageSource.gallery);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -151,14 +194,77 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     CustomTextField(
                       controller: _nameController,
-                      hintText: 'Input your name here',
-                      placeholder: 'Full Name',
+                      hintText: 'Masukkan nama lengkap Anda',
+                      placeholder: 'Nama Lengkap',
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Alamat',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextField(
+                      controller: _addressController,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan alamat Anda di sini',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Jenis Kelamin',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: DropdownButtonFormField<String>(
+                        value: ['Male', 'Female', null]
+                                .contains(_genderController.text)
+                            ? _genderController.text
+                            : null,
+                        decoration: InputDecoration(
+                          hintText: 'Pilih Jenis Kelamin Anda',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _genderController.text = value!;
+                          });
+                        },
+                        items: ['Male', 'Female']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                                value == 'Male' ? 'Laki-laki' : 'Perempuan'),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    CustomTextField(
+                      controller: _ageController,
+                      hintText: 'Masukkan umur Anda',
+                      placeholder: 'Umur Anda',
                     ),
                     SizedBox(height: 20),
                     CustomTextField(
                       controller: _phoneController,
-                      hintText: 'Input your phone number here',
-                      placeholder: 'Phone Number',
+                      hintText: 'Masukkan nomor telepon Anda',
+                      placeholder: 'Nomor Telepon',
                       isPhone: true,
                     ),
                     SizedBox(height: 20),
@@ -172,7 +278,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     CustomTextField(
                       controller: _passwordController,
                       hintText: '*******',
-                      placeholder: 'Change Password',
+                      placeholder: 'Ganti Password Anda',
                       isPassword: true,
                     ),
                     SizedBox(height: 20),
@@ -186,35 +292,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       onPressed: () async {
                         try {
+                          _showLoadingDialog(context);
                           if (_imageFile != null) {
                             await profile
-                                .updateProfilePicture(_imageFile!.path)
-                                .then((value) {
-                              profile.updateUserProfile(
-                                name: _nameController.text,
-                                phoneNumber: _phoneController.text,
-                                password: _passwordController.text,
-                                photoUrl: value,
-                              );
-                            });
-                          } else {
-                            profile.updateUserProfile(
-                              name: _nameController.text,
-                              phoneNumber: _phoneController.text,
-                              password: _passwordController.text,
-                            );
+                                .updateProfilePicture(_imageFile!.path);
                           }
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Profile updated successfully!')),
+                          await profile.updateUserProfile(
+                            name: _nameController.text,
+                            phoneNumber: _phoneController.text,
+                            password: _passwordController.text.isNotEmpty
+                                ? _passwordController.text
+                                : null,
+                            address: _addressController.text,
+                            gender: _genderController.text,
+                            age: _ageController.text,
                           );
-                          Navigator.of(context).pop();
+                          _hideLoadingDialog(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Profile updated successfully'),
+                          ));
+                          Navigator.pop(context);
                         } catch (e) {
-                          print(e);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Failed to update profile: $e')),
-                          );
+                          _hideLoadingDialog(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Failed to update profile: $e'),
+                          ));
+                          print('Failed to update profile: $e');
                         }
                       },
                       child: Text(

@@ -5,8 +5,14 @@ import 'package:sicare_app/components/doctor_card.dart';
 import '../../providers/doctorProvider.dart';
 
 class DoctorCategoryScreen extends StatefulWidget {
-  const DoctorCategoryScreen({super.key, required this.category});
+  const DoctorCategoryScreen({
+    Key? key,
+    required this.category,
+    required this.showAllDoctors,
+  }) : super(key: key);
+
   final String category;
+  final bool showAllDoctors;
 
   @override
   State<DoctorCategoryScreen> createState() => _DoctorCategoryScreenState();
@@ -25,9 +31,9 @@ class _DoctorCategoryScreenState extends State<DoctorCategoryScreen> {
         _searchResults = [];
       });
     } else {
-      print(value);
       final results = _listDoctors
-          .where((doctor) => doctor['nama'].toLowerCase().contains(value))
+          .where((doctor) =>
+              doctor['nama'].toLowerCase().contains(value.toLowerCase()))
           .toList();
       setState(() {
         _isSearching = true;
@@ -85,8 +91,9 @@ class _DoctorCategoryScreenState extends State<DoctorCategoryScreen> {
               ] else ...[
                 Expanded(
                   child: FutureBuilder(
-                    future:
-                        doctorProvider.getDoctorsByPosition(widget.category),
+                    future: widget.showAllDoctors
+                        ? doctorProvider.getAllDoctorsWithAvailableDates()
+                        : doctorProvider.getDoctorsByPosition(widget.category),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(

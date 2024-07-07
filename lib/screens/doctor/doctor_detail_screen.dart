@@ -24,7 +24,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   DateTime? selectedPickerDate;
   List<dynamic> noTimeHandler = [
     {
-      'slots': ['No Time Available'],
+      'slots': ['Tidak Ada Waktu Tersedia'],
     },
   ];
   List<dynamic> listSelectedAvailable = [];
@@ -57,7 +57,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Doctor Detail',
+          'Detail Dokter',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -131,7 +131,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                               icon: Icons.work,
                               iconColor: Color(0xff7A7A7A),
                               iconSize: 18,
-                              title: '${widget.doctorData['pengalaman']} Years',
+                              title: '${widget.doctorData['pengalaman']}',
                               color: Color(0xffD3D3D3).withOpacity(0.5),
                             ),
                             SizedBox(
@@ -217,7 +217,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       children: [
                         // Title Appointment
                         Text(
-                          'Book Appointment',
+                          'Jadwal Janji Temu',
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -227,7 +227,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         ),
                         // Booking Date
                         Text(
-                          'Day',
+                          'Hari',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -292,7 +292,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         ),
                         // Booking Time
                         Text(
-                          'Time',
+                          'Jam',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -494,7 +494,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       ),
                     ),
                     child: Text(
-                      'Make Appointment',
+                      'Buat Janji Temu',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,

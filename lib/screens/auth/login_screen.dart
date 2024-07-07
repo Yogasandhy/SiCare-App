@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/components/custom_text_field.dart';
+import 'package:sicare_app/screens/auth/forgotPassword.dart';
 import 'package:sicare_app/screens/home/bottomnavbar.dart';
 import 'package:sicare_app/screens/auth/register_screen.dart';
 import '../../providers/Auth.dart';
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(width: 20),
-                Text("Logging in..."),
+                Text("Masuk..."),
               ],
             ),
           ),
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Log in',
+          'Masuk',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18.0,
@@ -78,14 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               CustomTextField(
                 controller: _emailController,
-                hintText: "Input your email here",
+                hintText: "Masukkan Email Anda",
                 placeholder: "Email",
               ),
               SizedBox(height: 20),
               CustomTextField(
                 controller: _passwordController,
-                hintText: "Input your password here",
-                placeholder: "Password",
+                hintText: "Masukkan Kata Sandi Anda",
+                placeholder: "Kata Sandi",
                 isPassword: true,
               ),
               SizedBox(height: 14),
@@ -94,10 +95,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // Navigator.pushNamed(context, '/forgot-password');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ForgotPasswordPage(),
+                        ),
+                      );
                     },
                     child: Text(
-                      'Forgot Password?',
+                      'Lupa Kata Sandi?',
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Color(0xFF0E82FD),
@@ -138,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _hideLoadingDialog(context); // Hide loading dialog
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Email or password is incorrect'),
+                        content: Text('Email or Kata Sandi salah'),
                       ),
                     );
                   }
@@ -151,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Text(
-                  'Log in',
+                  'Masuk',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
@@ -164,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account? ",
+                    "Belum Punya Akun? ",
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.black,
@@ -172,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => RegisterScreen(),
@@ -180,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: Text(
-                      'Sign up',
+                      'Daftar',
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Color(0xFF0E82FD),

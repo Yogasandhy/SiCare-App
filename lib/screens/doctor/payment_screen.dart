@@ -24,8 +24,11 @@ class _PaymentPageState extends State<PaymentPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Payment',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Pembayaran',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -51,7 +54,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'Payment Successful!',
+                    'Pembayaran Berhasil!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -59,8 +62,9 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'You have successfully booked appointment with',
+                    'Anda berhasil memesan janji temu dengan rincian',
                   ),
+                  const SizedBox(height: 10),
                   const SizedBox(height: 30),
                   Column(
                     children: [
@@ -181,7 +185,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ),
                     child: Text(
-                      'View Appointment',
+                      'Lihat Janji Temu',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -207,7 +211,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       side: BorderSide(color: Colors.blue),
                     ),
                     child: Text(
-                      'Back to Home',
+                      'Kembali ke Beranda',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.blue,

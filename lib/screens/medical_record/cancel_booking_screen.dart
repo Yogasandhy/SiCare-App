@@ -22,11 +22,11 @@ class CancelBookingScreen extends StatefulWidget {
 class _CancelBookingScreenState extends State<CancelBookingScreen> {
   TextEditingController _otherReasonController = TextEditingController();
   List<String> reasons = [
-    'Schedule change',
-    'Weather conditions',
-    'Unexpected work',
-    'Childcare issue',
-    'Travel delay',
+    'Perubahan jadwal',
+    'Kondisi cuaca',
+    'Pekerjaan tak terduga',
+    'Masalah mengasuh anak',
+    'Penundaan Perjalanan',
   ];
   String reason = '';
   final String status = 'Dibatalkan';
@@ -37,7 +37,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Cancel Booking',
+          'Batalkan Janji Temu',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
@@ -60,7 +60,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Please select the reason for cancellations:',
+                          'Pilih Alasan membatalkan',
                           style: TextStyle(
                             fontSize: 14,
                             color: Color(0xff7A7A7A),
@@ -112,7 +112,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Other',
+                          'Lainnya',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -134,7 +134,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                             });
                           },
                           decoration: InputDecoration(
-                            hintText: 'Enter your reason',
+                            hintText: 'Masukkan alasan lainnya',
                             hintStyle: TextStyle(
                               fontSize: 14,
                               color: Color(0xff7A7A7A),
@@ -205,9 +205,9 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                                   )),
                             ),
                             child: Text(
-                              'No, Cancel',
+                              'Tidak, Batalkan',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Color(0xff0E82FD),
                               ),
                             ),
@@ -226,9 +226,9 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Appointment has been cancelled',
+                                      'Janji temu berhasil dibatalkan',
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 13,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -268,7 +268,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                                   )),
                             ),
                             child: Text(
-                              'Yes, Continue',
+                              'Ya, Lanjutkan',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.white,
@@ -288,7 +288,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                   ),
                 ),
                 child: Text(
-                  'Cancel Appointment',
+                  'Batalkan Janji Temu',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,

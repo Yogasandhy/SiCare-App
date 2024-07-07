@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sicare_app/screens/admin/add_doctor_screen.dart';
+import 'package:sicare_app/components/custom_appbar.dart';
 import '../../components/doctor_card.dart';
 import '../../providers/doctorProvider.dart';
 import 'doctor_category_screen.dart';
@@ -16,25 +16,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   final List<String> imagePaths = [
-    'assets/doctor.png',
-    'assets/dentist.png',
-    'assets/heart.png',
-    'assets/ear.png',
-    'assets/intestine.png',
-    'assets/moon.png',
-    'assets/brain.png',
-    'assets/health.png',
+    'assets/umum.png',
+    'assets/gigi.png',
+    'assets/kardiologi.png',
+    'assets/otologi.png',
+    'assets/ortopendi.png',
+    'assets/neurologi.png',
+    'assets/usus.png',
+    'assets/semua.png',
   ];
 
   final List<String> cardLabels = [
-    'Doctor',
-    'Dentist',
-    'Heart',
-    'Ear',
-    'Intestine',
-    'Moon',
-    'Brain',
-    'Health',
+    'Umum',
+    'Gigi',
+    'Kardiologi',
+    'Otologi',
+    'Ortopendi',
+    'Neurologi',
+    'Usus',
+    'Lihat Semua',
   ];
 
   TextEditingController _searchController = TextEditingController();
@@ -72,16 +72,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Add this line
+    super.build(context);
     final doctorP = Provider.of<DoctorProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset('assets/mainlogobiru.png', fit: BoxFit.cover),
-        automaticallyImplyLeading: false,
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
+        child: ListView(
           children: [
             SearchBar(
               padding: const WidgetStatePropertyAll<EdgeInsets>(
@@ -117,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen>
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.isAdmin ? 'Dashboard' : 'Consultation With Doctor',
+                  widget.isAdmin ? 'Dashboard' : 'Konsultasi dengan Dokter',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -138,14 +135,43 @@ class _HomeScreenState extends State<HomeScreen>
                           return _buildCard(
                               Icons.local_hospital, 'Doctor', 'Error');
                         }
-                        return _buildCard(Icons.local_hospital, 'Doctor',
-                            '${snapshot.data} Doctors');
+                        return _buildCard(Icons.local_hospital, 'Dokter',
+                            '${snapshot.data} Dokter');
                       },
                     ),
                     SizedBox(width: 10),
-                    _buildCard(Icons.people, 'Patient', '20 Patients'),
+                    FutureBuilder<int>(
+                      future: doctorP.getUserCount(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return _buildCard(
+                              Icons.people, 'Pasien', 'Loading...');
+                        }
+                        if (snapshot.hasError) {
+                          return _buildCard(Icons.people, 'Pasien', 'Error');
+                        }
+                        return _buildCard(
+                            Icons.people, 'Pasien', '${snapshot.data} Pasien');
+                      },
+                    ),
                     SizedBox(width: 10),
-                    _buildCard(Icons.assignment, 'Record', '30 Records'),
+                    FutureBuilder<int>(
+                      future: doctorP.getActiveAppointmentsCount(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return _buildCard(
+                              Icons.assignment, 'Janji Temu', 'Loading...');
+                        }
+                        if (snapshot.hasError) {
+                          return _buildCard(
+                              Icons.assignment, 'Janji Temu', 'Error');
+                        }
+                        return _buildCard(Icons.assignment, 'Janji Temu',
+                            '${snapshot.data} Aktif');
+                      },
+                    ),
                   ],
                 ),
               ] else ...[
@@ -162,6 +188,8 @@ class _HomeScreenState extends State<HomeScreen>
                           MaterialPageRoute(
                             builder: (context) => DoctorCategoryScreen(
                               category: cardLabels[index],
+                              showAllDoctors:
+                                  cardLabels[index] == 'Lihat Semua',
                             ),
                           ),
                         );
@@ -180,7 +208,10 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                             ),
                           ),
-                          Text(cardLabels[index]),
+                          Text(
+                            cardLabels[index],
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ],
                       ),
                     );
@@ -192,42 +223,9 @@ class _HomeScreenState extends State<HomeScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Doctors',
+                    'Dokter',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  widget.isAdmin
-                      ? ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddDoctorScreen(),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(120, 40),
-                            backgroundColor: Color(0xff0E82FD),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0)),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              Text('Add Doctor',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white)),
-                            ],
-                          ))
-                      : Container(),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -241,21 +239,21 @@ class _HomeScreenState extends State<HomeScreen>
                     return Center(child: Text('No data available'));
                   }
                   final doctors = snapshot.data!;
-                  return Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _refreshData,
-                      child: ListView.builder(
-                        itemCount: doctors.length,
-                        itemBuilder: (context, index) {
-                          final doctorData = doctors[index];
-                          return DoctorCard(
-                            doctorId: doctorData['id'],
-                            doctorData: doctorData,
-                            availableDates: doctorData['available_dates'],
-                            isAdmin: widget.isAdmin,
-                          );
-                        },
-                      ),
+                  return RefreshIndicator(
+                    onRefresh: _refreshData,
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: doctors.length,
+                      itemBuilder: (context, index) {
+                        final doctorData = doctors[index];
+                        return DoctorCard(
+                          doctorId: doctorData['id'],
+                          doctorData: doctorData,
+                          availableDates: doctorData['available_dates'],
+                          isAdmin: widget.isAdmin,
+                        );
+                      },
                     ),
                   );
                 },

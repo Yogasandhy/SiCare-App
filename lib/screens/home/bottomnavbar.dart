@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sicare_app/providers/historyProvider.dart';
+import 'package:sicare_app/screens/admin/appointment_screen.dart';
 import 'package:sicare_app/screens/medical_record/medicalrecordScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:sicare_app/screens/admin/doctorScreen.dart';
-import 'package:sicare_app/screens/admin/patientScreen.dart';
 import 'package:sicare_app/screens/profile/profileScreen.dart';
 import 'package:sicare_app/screens/home/home_screen.dart';
 import '../../providers/Auth.dart';
@@ -42,7 +42,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
   List<Widget> get _adminWidgetOptions => [
         HomeScreen(isAdmin: true),
         DoctorScreen(),
-        PatientScreen(),
+        AppointmentScreen(),
         ProfileScreen(),
       ];
 
@@ -177,10 +177,10 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                         Colors.blue, BlendMode.srcIn)
                                     : ColorFilter.mode(
                                         Colors.grey, BlendMode.srcIn),
-                                child: Image.asset('assets/patient.png'),
+                                child: Image.asset('assets/file.png'),
                               ),
                             ),
-                            label: 'Pasien',
+                            label: 'Janji Temu',
                           ),
                           BottomNavigationBarItem(
                             icon: Padding(
@@ -210,7 +210,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                 child: Image.asset('assets/home.png'),
                               ),
                             ),
-                            label: 'Home',
+                            label: 'Beranda',
                           ),
                           BottomNavigationBarItem(
                             icon: Padding(
@@ -224,7 +224,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                 child: Image.asset('assets/file.png'),
                               ),
                             ),
-                            label: 'Medical',
+                            label: 'Janji Temu',
                           ),
                           BottomNavigationBarItem(
                             icon: Padding(
@@ -238,7 +238,7 @@ class _BottomnavbarScreenState extends State<BottomnavbarScreen> {
                                 child: Image.asset('assets/user.png'),
                               ),
                             ),
-                            label: 'Profile',
+                            label: 'Profil',
                           ),
                         ],
                 ),

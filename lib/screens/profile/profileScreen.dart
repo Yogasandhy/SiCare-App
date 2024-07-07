@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sicare_app/components/custom_appbar.dart';
 import 'package:sicare_app/screens/opening/welcomeScreen.dart';
 import 'package:sicare_app/screens/profile/editProfileScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../providers/Auth.dart';
 import '../../providers/profileProvider.dart';
 
@@ -17,14 +17,14 @@ class ProfileScreen extends StatelessWidget {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Logout"),
-          content: Text("Are you sure you want to logout?"),
+          title: Text("Keluar dari Akun"),
+          content: Text("Apakah Anda yakin ingin keluar dari akun?"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text("Batal"),
             ),
             TextButton(
               onPressed: () {
@@ -36,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: Text("Logout"),
+              child: Text("Keluar"),
             ),
           ],
         );
@@ -51,18 +51,7 @@ class ProfileScreen extends StatelessWidget {
     final profile = Provider.of<ProfileProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
+      appBar: const CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: StreamBuilder<DocumentSnapshot>(
@@ -142,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: Image.asset('assets/people.png'),
-                    title: Text('Edit Profile'),
+                    title: Text('Ubah Informasi Profil'),
                     trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue),
                     onTap: () {
                       Navigator.push(
@@ -162,7 +151,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: Image.asset('assets/logout.png'),
-                    title: Text('Logout'),
+                    title: Text('Keluar dari Akun'),
                     trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue),
                     onTap: () {
                       _showLogoutDialog(context, auth);

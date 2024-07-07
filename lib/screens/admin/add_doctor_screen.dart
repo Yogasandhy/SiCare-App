@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../providers/AddDoctorProvider.dart';
 import 'dart:io';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 
 class AddDoctorScreen extends StatefulWidget {
   const AddDoctorScreen({super.key});
@@ -33,7 +33,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Tambah Dokter',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              )),
+          centerTitle: true,
         ),
         body: Stack(
           children: [
@@ -80,14 +84,13 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   _buildTextField('Deskripsi', _descriptionController),
                   _buildTextField('Alumni', _alumniController),
                   _buildDropdownField('Posisi', _selectedPosition, [
-                    'Doctor',
-                    'Dentist',
-                    'Heart',
-                    'Ear',
-                    'Intestine',
-                    'Moon',
-                    'Brain',
-                    'Health'
+                    'Umum',
+                    'Gigi',
+                    'Kardiologi',
+                    'Otologi',
+                    'Ortopendi',
+                    'Neurologi',
+                    'Usus',
                   ]),
                   _buildDropdownField('Pengalaman', _selectedExperience, [
                     '5 tahun',

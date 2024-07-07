@@ -48,7 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(width: 20),
-                Text("Registering..."),
+                Text("Pendaftaran..."),
               ],
             ),
           ),
@@ -67,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Register',
+          'Pendaftaran',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18.0,
@@ -85,27 +85,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               CustomTextField(
                 controller: _nameController,
-                hintText: 'Input your name here',
-                placeholder: 'Full Name',
+                hintText: 'Masukan nama lengkap anda',
+                placeholder: 'Nama Lengkap',
               ),
               SizedBox(height: 20),
               CustomTextField(
                 controller: _phoneController,
-                hintText: 'Input your phone number here',
-                placeholder: 'Phone Number',
+                hintText: 'Masukkan nomor telepon anda',
+                placeholder: 'Nomor Telepon',
                 isPhone: true,
               ),
               SizedBox(height: 20),
               CustomTextField(
                 controller: _emailController,
-                hintText: 'Input your email here',
+                hintText: 'Masukkan email anda',
                 placeholder: 'Email',
               ),
               SizedBox(height: 20),
               CustomTextField(
                 controller: _passwordController,
-                hintText: 'Input your password here',
-                placeholder: 'Password',
+                hintText: 'Masukkan Kata Sandi anda',
+                placeholder: 'Kata Sandi',
                 isPassword: true,
               ),
               SizedBox(height: 113),
@@ -148,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 child: Text(
-                  'Register',
+                  'Daftar',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Already have an account? ',
+                    'Sudah memiliki akun? ',
                     style: TextStyle(
                       fontSize: 12.0,
                     ),
@@ -177,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       );
                     },
                     child: Text(
-                      'Sign In',
+                      'Masuk',
                       style: TextStyle(
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,

@@ -56,10 +56,6 @@ class _EditDoctorScreenState extends State<EditDoctorScreen> {
       _selectedExperience = doctor['pengalaman'];
       _imageUrl = doctor['imageUrl'];
     });
-
-    // Debugging print statements to verify data
-    print('Selected Position: $_selectedPosition');
-    print('Selected Experience: $_selectedExperience');
   }
 
   @override
@@ -146,14 +142,13 @@ class _EditDoctorScreenState extends State<EditDoctorScreen> {
                   _buildTextField('Deskripsi', _descriptionController),
                   _buildTextField('Alumni', _alumniController),
                   _buildDropdownField('Posisi', _selectedPosition, [
-                    'Doctor',
-                    'Dentist',
-                    'Heart',
-                    'Ear',
-                    'Intestine',
-                    'Moon',
-                    'Brain',
-                    'Health'
+                    'Umum',
+                    'Gigi',
+                    'Kardiologi',
+                    'Otologi',
+                    'Ortopendi',
+                    'Neurologi',
+                    'Usus',
                   ]),
                   _buildDropdownField('Pengalaman', _selectedExperience, [
                     '5 tahun',
